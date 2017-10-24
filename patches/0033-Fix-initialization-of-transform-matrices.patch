@@ -1,0 +1,25 @@
+From 78f4b1aae54ec46e88e9145b5ff58aae6de46b64 Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Thu, 12 Oct 2017 14:35:13 +0200
+Subject: [PATCH 33/41] Fix initialization of transform matrices
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index d4a5465..c17e0c7 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -562,6 +562,8 @@ RokiVisualShape::RokiVisualShape(SgNode* node, const RokiLink& link)
+     visitors.updateDispatchTable();
+ 
+     zShape3DInit(&shape_);
++    currentTransform.setIdentity();
++    currentTransformWithoutScaling.setIdentity();
+     visitors.dispatch(node);
+ }
+ 
+-- 
+2.7.4
+

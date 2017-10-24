@@ -1,0 +1,50 @@
+From 3284e006148b65e232402e7fd2a0d8ee1f64cd34 Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Thu, 12 Oct 2017 14:36:54 +0200
+Subject: [PATCH 34/41] Fix comparison of two float numbers
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index c17e0c7..b6bcef9 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -464,9 +464,9 @@ bool RokiOpticalInfo::operator==(const RokiOpticalInfo& other) const
+     return ((amb() - other.amb()).norm() < epsilon) &&
+         ((dif() - other.dif()).norm() < epsilon) &&
+         ((spc() - other.spc()).norm() < epsilon) &&
+-        ((ns() - other.ns()) < epsilon) &&
+-        ((sns() - other.sns()) < epsilon) &&
+-        ((alpha() - other.alpha()) < epsilon);
++        (fabs(ns() - other.ns()) < epsilon) &&
++        (fabs(sns() - other.sns()) < epsilon) &&
++        (fabs(alpha() - other.alpha()) < epsilon);
+ }
+ 
+ 
+@@ -639,16 +639,18 @@ bool RokiVisualShape::canBeCreatedAsPrimitive(SgMesh* mesh)
+     }
+ 
+     Vector3 scale = S.linear().diagonal();
++    const double epsilon = 1.0e-6;
+     if(type == SgMesh::BOX){
+         return true;
+     } else if(type == SgMesh::SPHERE){
+         // check if the sphere is uniformly scaled for all the axes
+-        if(scale.x() == scale.y() && scale.x() == scale.z()){
++        if(fabs(scale.x() - scale.y()) < epsilon &&
++           fabs(scale.x() - scale.z()) < epsilon){
+             return true;
+         }
+     } else if(type == SgMesh::CYLINDER || type == SgMesh::CONE){
+         // check if the bottom circle face is uniformly scaled
+-        if(scale.x() == scale.z()){
++        if(fabs(scale.x() - scale.z()) < epsilon){
+             return true;
+         }
+     }
+-- 
+2.7.4
+

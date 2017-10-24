@@ -1,0 +1,55 @@
+From 6d28ac304101d746f46b136259b29a4b02a25ef1 Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Thu, 12 Oct 2017 15:27:16 +0200
+Subject: [PATCH 38/41] Remove some functions
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 18 ------------------
+ 1 file changed, 18 deletions(-)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index 8e69af9..b20cbc5 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -162,8 +162,6 @@ private:
+ 
+     void visitGroup(SgGroup* group);
+     void visitSwitch(SgSwitch* switchNode);
+-    void visitTransform(SgTransform* transform);
+-    void visitPosTransform(SgPosTransform* transform);
+     void visitShape(SgShape* shape);
+ 
+     string createName();
+@@ -406,10 +404,6 @@ RokiOpticalInfo::RokiOpticalInfo(SgNode* node)
+         [&](SgGroup* node){ visitGroup(node); });
+     visitors.setFunction<SgSwitch>(
+         [&](SgSwitch* node){ visitSwitch(node); });
+-    visitors.setFunction<SgTransform>(
+-        [&](SgTransform* node){ visitTransform(node); });
+-    visitors.setFunction<SgPosTransform>(
+-        [&](SgPosTransform* node){ visitPosTransform(node); });
+     visitors.setFunction<SgShape>(
+         [&](SgShape* node){ visitShape(node); });
+     visitors.updateDispatchTable();
+@@ -435,18 +429,6 @@ void RokiOpticalInfo::visitSwitch(SgSwitch* switchNode)
+ }
+ 
+ 
+-void RokiOpticalInfo::visitTransform(SgTransform* transform)
+-{
+-    visitGroup(transform);
+-}
+-
+-
+-void RokiOpticalInfo::visitPosTransform(SgPosTransform* transform)
+-{
+-    visitGroup(transform);
+-}
+-
+-
+ void RokiOpticalInfo::visitShape(SgShape* shape)
+ {
+     SgMaterial* material = shape->material();
+-- 
+2.7.4
+

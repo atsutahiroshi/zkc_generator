@@ -1,0 +1,26 @@
+From 2c2645afabcafb8b61512adc72216d0ddcede108 Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Thu, 12 Oct 2017 15:45:36 +0200
+Subject: [PATCH 40/41] Add comments
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index c8b5c11..0102db3 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -1627,6 +1627,9 @@ void RokiBody::exportAsZkcFile(const std::string& filename)
+ 
+     // export
+     rkChainWriteFile(chain, (char *)filename.c_str());
++    // TODO:
++    //   Fix to revert to collision shape.
++    //   Following function causes double-free of some memory
+     // switchToColShape();
+ }
+ 
+-- 
+2.7.4
+

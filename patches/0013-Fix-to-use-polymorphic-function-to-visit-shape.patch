@@ -1,0 +1,213 @@
+From b24722c4721602b2694c4256311fad76923f690e Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Tue, 10 Oct 2017 16:21:50 +0200
+Subject: [PATCH 13/41] Fix to use polymorphic function to visit shape
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 121 ++++++++++++++++++++++++++---------
+ 1 file changed, 89 insertions(+), 32 deletions(-)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index 14ea746..724c48c 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -20,6 +20,7 @@
+ #include <cnoid/BodyCollisionDetectorUtil>
+ #include <cnoid/FloatingNumberString>
+ #include <cnoid/EigenUtil>
++#include <cnoid/PolymorphicFunctionSet>
+ #include <cnoid/MeshExtractor>
+ #include <cnoid/SceneDrawables>
+ #include <cnoid/FileUtil>
+@@ -131,26 +132,40 @@ rkMotor *rkMotorCreateJm2(rkMotor *m)
+ 
+ namespace {
+ 
+-class RokiOpticalInfo : public SgMaterial
++class RokiOpticalInfo
+ {
+ public:
+-    RokiOpticalInfo();
+-    RokiOpticalInfo(const RokiOpticalInfo& org);
+-    RokiOpticalInfo(const SgMaterial& org);
++    RokiOpticalInfo(SgNode* node);
+ 
+     bool operator==(const RokiOpticalInfo& other) const;
+     bool operator!=(const RokiOpticalInfo& other) const;
+ 
++    const Vector3f& amb() const { return amb_; }
++    const Vector3f& dif() const { return dif_; }
++    const Vector3f& spc() const { return spc_; }
++    float ns() const { return ns_; }
++    float sns() const { return sns_; }
++    float alpha() const { return alpha_; }
+     const string& name() const { return name_; }
++    void setName(const std::string& name);
+     void exportToZOpticalInfo(zOpticalInfo* opt);
+ 
+ private:
++    RokiOpticalInfo();
++    PolymorphicFunctionSet<SgNode> visitors;
++
+     Vector3f amb_, dif_, spc_;
+     float ns_, sns_, alpha_;
+     string name_;
+ 
++    void visitGroup(SgGroup* group);
++    void visitSwitch(SgSwitch* switchNode);
++    void visitTransform(SgTransform* transform);
++    void visitPosTransform(SgPosTransform* transform);
++    void visitShape(SgShape* shape);
++
+     string createName();
+-    void scaleToRokiCompatible();
++    void scaleToRokiCompatible(SgMaterial *material);
+ };
+ 
+ 
+@@ -307,23 +322,58 @@ enum{ FD_SOLVER_VERT, FD_SOLVER_VOLUME };
+ }
+ 
+ 
+-RokiOpticalInfo::RokiOpticalInfo()
++RokiOpticalInfo::RokiOpticalInfo(SgNode* node)
++{
++    visitors.setFunction<SgGroup>(
++        [&](SgGroup* node){ visitGroup(node); });
++    visitors.setFunction<SgSwitch>(
++        [&](SgSwitch* node){ visitSwitch(node); });
++    visitors.setFunction<SgTransform>(
++        [&](SgTransform* node){ visitTransform(node); });
++    visitors.setFunction<SgPosTransform>(
++        [&](SgPosTransform* node){ visitPosTransform(node); });
++    visitors.setFunction<SgShape>(
++        [&](SgShape* node){ visitShape(node); });
++    visitors.updateDispatchTable();
++    visitors.dispatch(node);
++}
++
++
++void RokiOpticalInfo::visitGroup(SgGroup* group)
++{
++    for(auto const p : *group){
++        visitors.dispatch(p);
++    }
++}
++
++
++void RokiOpticalInfo::visitSwitch(SgSwitch* switchNode)
++{
++    if(switchNode->isTurnedOn()){
++        visitGroup(switchNode);
++    }
++}
++
++
++void RokiOpticalInfo::visitTransform(SgTransform* transform)
+ {
+-    scaleToRokiCompatible();
++    visitGroup(transform);
+ }
+ 
+ 
+-RokiOpticalInfo::RokiOpticalInfo(const RokiOpticalInfo& org)
+-    : SgMaterial(org)
++void RokiOpticalInfo::visitPosTransform(SgPosTransform* transform)
+ {
+-    scaleToRokiCompatible();
++    visitGroup(transform);
+ }
+ 
+ 
+-RokiOpticalInfo::RokiOpticalInfo(const SgMaterial& org)
+-    : SgMaterial(org)
++void RokiOpticalInfo::visitShape(SgShape* shape)
+ {
+-    scaleToRokiCompatible();
++    SgMaterial* material = shape->material();
++    if(material){
++        scaleToRokiCompatible(material);
++    }
++    SgMesh* mesh = shape->mesh();
+ }
+ 
+ 
+@@ -331,12 +381,12 @@ bool RokiOpticalInfo::operator==(const RokiOpticalInfo& other) const
+ {
+     const float epsilon = 1.0e-4;
+ 
+-    return ((diffuseColor() - other.diffuseColor()).norm() < epsilon) &&
+-        ((emissiveColor() - other.emissiveColor()).norm() < epsilon) &&
+-        ((specularColor() - other.specularColor()).norm() < epsilon) &&
+-        ((ambientIntensity() - other.ambientIntensity()) < epsilon) &&
+-        ((shininess() - other.shininess()) < epsilon) &&
+-        ((transparency() - other.transparency()) < epsilon);
++    return ((amb() - other.amb()).norm() < epsilon) &&
++        ((dif() - other.dif()).norm() < epsilon) &&
++        ((spc() - other.spc()).norm() < epsilon) &&
++        ((ns() - other.ns()) < epsilon) &&
++        ((sns() - other.sns()) < epsilon) &&
++        ((alpha() - other.alpha()) < epsilon);
+ }
+ 
+ 
+@@ -356,9 +406,6 @@ string RokiOpticalInfo::createName()
+     float alpha = alpha_ * 255.0f;
+     char name[256];
+ 
+-    if(!SgObject::name().empty())
+-        return SgObject::name();
+-
+     sprintf(name, "#%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+             (int)amb[0], (int)amb[1], (int)amb[2],
+             (int)dif[0], (int)dif[1], (int)dif[2],
+@@ -369,15 +416,21 @@ string RokiOpticalInfo::createName()
+ }
+ 
+ 
+-void RokiOpticalInfo::scaleToRokiCompatible()
++void RokiOpticalInfo::scaleToRokiCompatible(SgMaterial *m)
+ {
+-    amb_ = diffuseColor() * ambientIntensity();
+-    dif_ = diffuseColor();
+-    spc_ = specularColor();
++    amb_ = m->diffuseColor() * m->ambientIntensity();
++    dif_ = m->diffuseColor();
++    spc_ = m->specularColor();
+     ns_  = 1.0;
+-    sns_ = (127.0f * shininess()) + 1.0f;
+-    alpha_ = 1.0 - transparency();
+-    name_ = createName();
++    sns_ = (127.0f * m->shininess()) + 1.0f;
++    alpha_ = 1.0 - m->transparency();
++    setName(m->name());
++}
++
++
++void RokiOpticalInfo::setName(const std::string& name)
++{
++    name_ = name.empty() ? createName() : name;
+ }
+ 
+ 
+@@ -1091,10 +1144,14 @@ void RokiBody::findAllOpticalInfo(RokiOpticalInfoList& list)
+ {
+     for(int i=0; i<body()->numLinks(); ++i){
+         Link* link = body()->link(i);
+-        SgGroup *group = dynamic_cast<SgGroup*>(link->visualShape());
++        SgGroup *group;
++        if(!(group = dynamic_cast<SgGroup*>(link->visualShape()))){
++            cerr << "cannot be converted to 'SgGroup*': "
++                 << typeid(link->visualShape()).name() << endl;
++            continue;
++        }
+         for(auto child : *group){
+-            SgShape *shape = dynamic_cast<SgShape*>(child.get());
+-            list.add(RokiOpticalInfo(*shape->material()));
++            list.add(RokiOpticalInfo(child.get()));
+         }
+     }
+ }
+-- 
+2.7.4
+

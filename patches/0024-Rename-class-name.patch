@@ -1,0 +1,119 @@
+From 60c03f8fa8200f99ddf6fcca95d6936f23f6432f Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Wed, 11 Oct 2017 19:17:50 +0200
+Subject: [PATCH 24/41] Rename class name
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 60 ++++++++++++++++++------------------
+ 1 file changed, 30 insertions(+), 30 deletions(-)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index a53aace..636ec12 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -225,23 +225,23 @@ private:
+ };
+ 
+ 
+-class RokiShapeList
++class RokiVisualShapeList
+ {
+ public:
+-    bool add(zShape3D* shape, string opticName);
+-    zShape3D* get(int index) { return list_[index]; }
+-    string getOpticName(zShape3D* shape) { return opticNameMap_[shape]; }
+-    string getOpticName(int index) { return getOpticName(get(index)); }
++    bool add(RokiVisualShape shape);
++    RokiVisualShape& get(int index) { return list_[index]; }
++    const RokiVisualShape& get(int index) const { return list_[index]; }
++    // string getOpticName(zShape3D* shape) { return opticNameMap_[shape]; }
++    // string getOpticName(int index) { return getOpticName(get(index)); }
+     int num() const { return list_.size(); }
+ 
+-    vector<zShape3D*>::iterator begin() { return list_.begin(); }
+-    vector<zShape3D*>::iterator end() { return list_.end(); }
+-    vector<zShape3D*>::const_iterator begin() const { return list_.begin(); }
+-    vector<zShape3D*>::const_iterator end() const { return list_.end(); }
++    vector<RokiVisualShape>::iterator begin() { return list_.begin(); }
++    vector<RokiVisualShape>::iterator end() { return list_.end(); }
++    vector<RokiVisualShape>::const_iterator begin() const { return list_.begin(); }
++    vector<RokiVisualShape>::const_iterator end() const { return list_.end(); }
+ 
+ private:
+-    vector<zShape3D*> list_;
+-    map<zShape3D*, string> opticNameMap_;
++    vector<RokiVisualShape> list_;
+ };
+ 
+ 
+@@ -311,7 +311,7 @@ public:
+     void updateForceSensors();
+ 
+     void findAllOpticalInfo(RokiOpticalInfoList& list);
+-    void findAllShape(RokiShapeList& list);
++    void findAllShape(RokiVisualShapeList& list);
+     void exportAsZkcFile(const std::string& filename);
+ };
+ 
+@@ -526,14 +526,6 @@ bool RokiOpticalInfoList::add(RokiOpticalInfo opt)
+ }
+ 
+ 
+-bool RokiShapeList::add(zShape3D* shape, string opticName)
+-{
+-    list_.push_back(shape);
+-    opticNameMap_[shape] = opticName;
+-    return true;
+-}
+-
+-
+ RokiVisualShape::RokiVisualShape(SgNode* node, const RokiLink& link)
+     : link_(link)
+ {
+@@ -772,6 +764,13 @@ void RokiVisualShape::visitShape(SgShape* shape)
+ }
+ 
+ 
++bool RokiVisualShapeList::add(RokiVisualShape shape)
++{
++    list_.push_back(shape);
++    return true;
++}
++
++
+ RokiLink::RokiLink
+ (RokiSimulatorItemImpl* simImpl, RokiBody* rokiBody, RokiLink* parent, const Vector3& parentOrigin, Link* link, bool stuffisLinkName)
+ {
+@@ -1499,18 +1498,19 @@ void RokiBody::findAllOpticalInfo(RokiOpticalInfoList& list)
+ }
+ 
+ 
+-void RokiBody::findAllShape(RokiShapeList& list)
++void RokiBody::findAllShape(RokiVisualShapeList& list)
+ {
+     for(int i=0; i<body()->numLinks(); ++i){
+-        RokiLink *link = rokiLinkMap[body()->link(i)];
+-        if(link){
+-            zShapeListCell *cp;
+-            zListForEach(rkLinkShapeList(link->rklink), cp){
+-                list.add(cp->data, link->opticNameMap[cp->data]);
+-            }
+-        } else {
+-            cerr << "cannot be converted to 'RokiLink*': "
+-                 << typeid(body()->link(i)).name() << endl;
++        Link* link = body()->link(i);
++        RokiLink *rklink = rokiLinkMap[body()->link(i)];
++        SgGroup *group;
++        if(!(group = dynamic_cast<SgGroup*>(link->visualShape()))){
++            cerr << "cannot be converted to 'SgGroup*': "
++                 << typeid(link->visualShape()).name() << endl;
++        }
++        for(auto child : *group){
++            RokiVisualShape shape(child.get(), *rklink);
++            list.add(shape);
+         }
+     }
+ }
+-- 
+2.7.4
+

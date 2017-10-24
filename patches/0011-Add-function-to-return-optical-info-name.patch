@@ -1,0 +1,24 @@
+From f14f2ff14531cc6090bbbd7bb3b59f50f9809e2e Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Mon, 9 Oct 2017 15:07:22 +0200
+Subject: [PATCH 11/41] Add function to return optical info name
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index 05de751..3e48e31 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -141,6 +141,7 @@ public:
+     bool operator==(const RokiOpticalInfo& other) const;
+     bool operator!=(const RokiOpticalInfo& other) const;
+ 
++    const string& name() const { return name_; }
+     void exportToZOpticalInfo(zOpticalInfo* opt);
+ 
+ private:
+-- 
+2.7.4
+

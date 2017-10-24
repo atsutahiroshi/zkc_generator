@@ -1,0 +1,31 @@
+From 02b02243c6e35c9e64fb1031ed4fb4f6d175570c Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Tue, 17 Oct 2017 21:01:18 +0200
+Subject: [PATCH 41/41] Fix calculation of joint
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index 0102db3..ce99ece 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -860,7 +860,13 @@ void RokiLink::calcFrame()
+     Vector3 nx = z.cross(link->a());
+ 
+     if(nx.norm() < 1.0e-6){
+-        wAtt = Matrix3::Identity();
++        // wAtt = Matrix3::Identity();
++        Vector3 ny(0,1,0);
++        nx = ny.cross(link->a());
++        nx.normalize();
++        wAtt.col(0) = nx;
++        wAtt.col(1) = ny;
++        wAtt.col(2) = link->a();
+     }else{
+         nx.normalize();
+         wAtt.col(0) = nx;
+-- 
+2.7.4
+

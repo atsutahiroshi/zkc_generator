@@ -1,0 +1,399 @@
+From e408f5b4e76a3bb93176a1d86c0219bbeb8dfd95 Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Wed, 11 Oct 2017 18:30:38 +0200
+Subject: [PATCH 23/41] Add class to store visual shape information
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 319 +++++++++++++++++++++++++++++++++--
+ 1 file changed, 306 insertions(+), 13 deletions(-)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index 4f3b6df..a53aace 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -190,6 +190,41 @@ private:
+ };
+ 
+ 
++class RokiLink;
++class RokiVisualShape
++{
++public:
++    RokiVisualShape(SgNode* node, const RokiLink& link);
++
++    const zShape3D* get() const { return &shape_; }
++    zShape3D* get() { return &shape_; }
++    void setOpticName(const string& name){ opticName_ = name; }
++    string getOpticName() { return opticName_; }
++
++private:
++    RokiVisualShape();
++    PolymorphicFunctionSet<SgNode> visitors;
++    Affine3 currentTransform;
++    Affine3 currentTransformWithoutScaling;
++    bool isCurrentScaled;
++
++    const RokiLink& link_;
++    zShape3D shape_;
++    string opticName_;
++
++    void visitGroup(SgGroup* group);
++    void visitSwitch(SgSwitch* switchNode);
++    void visitTransform(SgTransform* transform);
++    void visitPosTransform(SgPosTransform* transform);
++    void visitShape(SgShape* shape);
++
++    string createShapeName();
++    bool canBeCreatedAsPrimitive(SgMesh* mesh);
++    void createAsPrimitive(SgMesh* mesh);
++    void createAsPolyhedron(SgMesh* mesh);
++};
++
++
+ class RokiShapeList
+ {
+ public:
+@@ -221,7 +256,7 @@ public:
+     Link* link;
+     rkLink* rklink;
+     vector<zShape3D*> shapes;
+-    map<zShape3D*, string> opticNameMap;
++    map<zShape3D*, string> opticNameMap; // deprecated
+     vector<Vector3> vertices;
+     vector<Triangle> triangles;
+     Matrix3 wAtt;  // world
+@@ -244,8 +279,13 @@ public:
+     void setKinematicStateToRoki(zVec dis, int k);
+     void setTorqueToRoki();
+ 
++    void switchToColShape();
++    void switchToVisShape();
++
+ private:
+-    string createShapeName();
++    zShapeList colShapeList;
++    zShapeList visShapeList;
++    void overwriteListRoot(zShapeList* old, zShapeList* novel);
+ };
+ typedef ref_ptr<RokiLink> RokiLinkPtr;
+ 
+@@ -494,6 +534,244 @@ bool RokiShapeList::add(zShape3D* shape, string opticName)
+ }
+ 
+ 
++RokiVisualShape::RokiVisualShape(SgNode* node, const RokiLink& link)
++    : link_(link)
++{
++    visitors.setFunction<SgGroup>(
++        [&](SgGroup* node){ visitGroup(node); });
++    visitors.setFunction<SgSwitch>(
++        [&](SgSwitch* node){ visitSwitch(node); });
++    visitors.setFunction<SgTransform>(
++        [&](SgTransform* node){ visitTransform(node); });
++    visitors.setFunction<SgPosTransform>(
++        [&](SgPosTransform* node){ visitPosTransform(node); });
++    visitors.setFunction<SgShape>(
++        [&](SgShape* node){ visitShape(node); });
++    visitors.updateDispatchTable();
++
++    zShape3DInit(&shape_);
++    visitors.dispatch(node);
++}
++
++
++void RokiVisualShape::visitGroup(SgGroup* group)
++{
++    for(auto const p : *group){
++        visitors.dispatch(p);
++    }
++}
++
++
++void RokiVisualShape::visitSwitch(SgSwitch* switchNode)
++{
++    if(switchNode->isTurnedOn()){
++        visitGroup(switchNode);
++    }
++}
++
++
++void RokiVisualShape::visitTransform(SgTransform* transform)
++{
++    // this code was copied from cnoid/MeshExtractor.cpp
++    bool isParentScaled = isCurrentScaled;
++    isCurrentScaled = true;
++    Affine3 T0 = currentTransform;
++    Affine3 T;
++    transform->getTransform(T);
++    currentTransform = T0 * T;
++    visitGroup(transform);
++    currentTransform = T0;
++    isCurrentScaled = isParentScaled;
++}
++
++
++void RokiVisualShape::visitPosTransform(SgPosTransform* transform)
++{
++    // this code was copied from cnoid/MeshExtractor.cpp
++    const Affine3 T0(currentTransform);
++    const Affine3 P0(currentTransformWithoutScaling);
++    currentTransform = T0 * transform->T();
++    currentTransformWithoutScaling = P0 * transform->T();
++    visitGroup(transform);
++    currentTransform = T0;
++    currentTransformWithoutScaling = P0;
++}
++
++
++string RokiVisualShape::createShapeName()
++{
++    stringstream stream;
++
++    stream << link_.link->name() << "#" << zListNum(rkLinkShapeList(link_.rklink));
++    return stream.str();
++}
++
++
++bool RokiVisualShape::canBeCreatedAsPrimitive(SgMesh* mesh)
++{
++    const int type = mesh->primitiveType();
++    if(type == SgMesh::MESH)
++        return false;
++
++    if(!isCurrentScaled)
++        return true;
++
++    Affine3 S = currentTransformWithoutScaling.inverse() *\
++        currentTransform;
++    if(!S.linear().isDiagonal())
++        return false;
++
++    Vector3 scale = S.linear().diagonal();
++    if(type == SgMesh::BOX){
++        return true;
++    } else if(type == SgMesh::SPHERE){
++        // check if the sphere is uniformly scaled for all the axes
++        if(scale.x() == scale.y() && scale.x() == scale.z())
++            return true;
++    } else if(type == SgMesh::CYLINDER || type == SgMesh::CONE){
++        // check if the bottom circle face is uniformly scaled
++        if(scale.x() == scale.z())
++            return true;
++    }
++    return false;
++}
++
++
++void RokiVisualShape::createAsPrimitive(SgMesh* mesh)
++{
++    Affine3 T = currentTransform;
++    Affine3 T_ = currentTransformWithoutScaling;
++    Affine3 S = T_.inverse() * T;
++    Vector3 scale;
++    if(isCurrentScaled)
++        scale = S.linear().diagonal();
++    else
++        scale.setOnes();
++    if(!S.translation().isZero())
++        T_ *= Translation3(S.translation());
++
++    Affine3 invT = Affine3::Identity();
++    invT.linear() = link_.wAtt.transpose();
++    Affine3 T0 = invT * T;
++    Vector3 p = T0.translation();
++
++    switch(mesh->primitiveType()){
++    case SgMesh::BOX : {
++        const Vector3& s = mesh->primitive<SgMesh::Box>().size;
++        zVec3D zp, ax, ay, az;
++        zVec3DCreate(&zp, p.x(), p.y(), p.z());
++        zVec3DCreate(&ax, T0(0,0), T0(1,0), T0(2,0));
++        zVec3DCreate(&ay, T0(0,1), T0(1,1), T0(2,1));
++        zVec3DCreate(&az, T0(0,2), T0(1,2), T0(2,2));
++        zShape3DCreateBox(&shape_, &zp, &ax, &ay, &az,
++                          s.x()*scale.x(), s.y()*scale.y(), s.z()*scale.z());
++        break; }
++    case SgMesh::SPHERE : {
++        SgMesh::Sphere sphere = mesh->primitive<SgMesh::Sphere>();
++        zVec3D zp;
++        zVec3DCreate(&zp, p.x(), p.y(), p.z());
++        zShape3DCreateSphere(&shape_, &zp, sphere.radius*scale.x(), 0);
++        break; }
++    case SgMesh::CYLINDER : {
++        SgMesh::Cylinder cylinder = mesh->primitive<SgMesh::Cylinder>();
++        Vector3 ay(T_(0,1), T_(1,1), T_(2,1));
++        ay *= cylinder.height/2.0 * scale.y();
++        Vector3 c1_ = T0 * ay.cast<Position::Scalar>();
++        Vector3 c2_ = T0 * (-ay).cast<Position::Scalar>();
++        zVec3D c1, c2;
++        zVec3DCreate(&c1, c1_.x(), c1_.y(), c1_.z());
++        zVec3DCreate(&c2, c2_.x(), c2_.y(), c2_.z());
++        zShape3DCreateCyl(&shape_, &c1, &c2, cylinder.radius*scale.x(), 0);
++        break; }
++    case SgMesh::CONE : {
++        SgMesh::Cone cone = mesh->primitive<SgMesh::Cone>();
++        Vector3 ay(T_(0,1), T_(1,1), T_(2,1));
++        ay *= cone.height/2.0 * scale.y();
++        Vector3 c1_ = T0 * ay.cast<Position::Scalar>();
++        Vector3 c2_ = T0 * (-ay).cast<Position::Scalar>();
++        zVec3D c1, c2;
++        zVec3DCreate(&c1, c1_.x(), c1_.y(), c1_.z());
++        zVec3DCreate(&c2, c2_.x(), c2_.y(), c2_.z());
++        zShape3DCreateCone(&shape_, &c1, &c2, cone.radius*scale.x(), 0);
++        break; }
++    default:
++        cerr << "cannot be created as primitive (type: "
++             << mesh->primitiveType() << ")" << endl;
++        break;
++    }
++    // bounding box
++    zBox3DInit(zShape3DBB(&shape_));
++}
++
++
++void RokiVisualShape::createAsPolyhedron(SgMesh* mesh)
++{
++    vector<Vector3> vertices;
++    vector<Triangle> triangles;
++    
++    Affine3 T = currentTransform;
++    Affine3 invT = Affine3::Identity();
++    invT.linear() = link_.wAtt.transpose();
++    Affine3 T0 = invT * T;
++
++    const SgVertexArray& vertices_ = *mesh->vertices();
++    const int numVertices = vertices_.size();
++    for(int i=0; i<numVertices; ++i){
++        const Vector3 v = T0 * vertices_[i].cast<Position::Scalar>();
++        vertices.push_back(v);
++    }
++
++    const int numTriangles = mesh->numTriangles();
++    for(int i=0; i < numTriangles; ++i){
++        SgMesh::TriangleRef src = mesh->triangle(i);
++        Triangle tri;
++        tri.indices[0] = src[0];
++        tri.indices[1] = src[1];
++        tri.indices[2] = src[2];
++        triangles.push_back(tri);
++    }
++
++    zShape3DType(&shape_) = zShapeTypeByStr((char*)"polyhedron");
++    shape_.com = &zprim_ph3d_com;
++    zPH3D* ph = (zPH3D*)&shape_.body;
++    zPH3DInit(ph);
++    int vc = vertices.size();
++    int fc = triangles.size();
++    zPH3DAlloc(ph, vc, fc);
++    for(int i=0; i<vc; i++){
++        zVec3D *v = zPH3DVert(ph, i);
++        zVec3DSetElem(v, zX, vertices[i].x());
++        zVec3DSetElem(v, zY, vertices[i].y());
++        zVec3DSetElem(v, zZ, vertices[i].z());
++    }
++    for(int i=0; i<fc; i++){
++        zTri3DCreate(zPH3DFace(ph, i),
++                     zPH3DVert(ph, triangles[i].indices[0]),
++                     zPH3DVert(ph, triangles[i].indices[1]),
++                     zPH3DVert(ph, triangles[i].indices[2]));
++    }
++    // bounding box
++    zAABox3D aabb;
++    zAABB(&aabb, zShape3DVertBuf(&shape_), zShape3DVertNum(&shape_), NULL);
++    zAABox3DToBox3D(&aabb, zShape3DBB(&shape_));
++}
++
++
++void RokiVisualShape::visitShape(SgShape* shape)
++{
++    SgMesh *mesh = shape->mesh();
++    if(canBeCreatedAsPrimitive(mesh)){
++        createAsPrimitive(mesh);
++    } else {
++        createAsPolyhedron(mesh);
++    }
++    RokiOpticalInfo opt(shape);
++    setOpticName(opt.name());
++    zNameSet(&shape_, const_cast<char*>(createShapeName().c_str()));
++    rkLinkShapePush(link_.rklink, &shape_);
++}
++
++
+ RokiLink::RokiLink
+ (RokiSimulatorItemImpl* simImpl, RokiBody* rokiBody, RokiLink* parent, const Vector3& parentOrigin, Link* link, bool stuffisLinkName)
+ {
+@@ -524,6 +802,10 @@ RokiLink::RokiLink
+         new RokiLink(simImpl, rokiBody, this, o, child, stuffisLinkName);
+     }
+ 
++    zListInit(&colShapeList);
++    zListInit(&visShapeList);
++    overwriteListRoot(&colShapeList, rkLinkShapeList(rklink));
++
+ }
+ 
+ 
+@@ -748,15 +1030,6 @@ void RokiLink::createLink(RokiSimulatorItemImpl* simImpl, RokiBody* body, const
+ }
+ 
+ 
+-string RokiLink::createShapeName()
+-{
+-    stringstream stream;
+-
+-    stream << link->name() << "#" << zListNum(rkLinkShapeList(rklink));
+-    return stream.str();
+-}
+-
+-
+ void RokiLink::createGeometry()
+ {
+     if(link->collisionShape()){
+@@ -766,7 +1039,7 @@ void RokiLink::createGeometry()
+                 zShape3D* sp = zAlloc( zShape3D, 1 );
+                 zShape3DInit(sp);
+                 zShape3DType(sp) = zShapeTypeByStr((char*)"polyhedron");
+-                zNameSet( sp, const_cast<char*>(createShapeName().c_str()) );
++                zNameSet( sp, const_cast<char*>(link->name().c_str()) );
+                 sp->com = &zprim_ph3d_com;
+ 
+                 zPH3D* ph = (zPH3D*)&sp->body;
+@@ -902,7 +1175,7 @@ void RokiLink::addMesh(MeshExtractor* extractor)
+             if(created){
+                 shapes.push_back(sp);
+                 zBox3DInit( zShape3DBB(sp) );
+-                zNameSet( sp, const_cast<char*>(createShapeName().c_str()) );
++                zNameSet( sp, const_cast<char*>(link->name().c_str()) );
+                 rkLinkShapePush( rklink, sp );
+                 meshAdded = true;
+             }
+@@ -1034,6 +1307,26 @@ void RokiLink::setTorqueToRoki()
+ }
+ 
+ 
++void RokiLink::overwriteListRoot(zShapeList* old, zShapeList* novel)
++{
++    zListSetNum(old, zListNum(novel));
++    zListCellSetPrev(zListRoot(old), zListHead(novel));
++    zListCellSetNext(zListRoot(old), zListTail(novel));
++}
++
++
++void RokiLink::switchToColShape()
++{
++    overwriteListRoot(rkLinkShapeList(rklink), &colShapeList);
++}
++
++
++void RokiLink::switchToVisShape()
++{
++    overwriteListRoot(rkLinkShapeList(rklink), &visShapeList);
++}
++
++
+ RokiBody::RokiBody(const Body& orgBody)
+     : SimulationBody(new Body(orgBody))
+ {
+-- 
+2.7.4
+

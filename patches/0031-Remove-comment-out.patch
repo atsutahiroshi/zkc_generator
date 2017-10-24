@@ -1,0 +1,25 @@
+From 7139da0a39955d0645fcbd2e146c6bd59e36f11c Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Thu, 12 Oct 2017 13:24:19 +0200
+Subject: [PATCH 31/41] Remove comment out
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index e1388ed..2d40299 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -233,8 +233,6 @@ public:
+     bool add(RokiVisualShape shape);
+     RokiVisualShape& get(int index) { return list_[index]; }
+     const RokiVisualShape& get(int index) const { return list_[index]; }
+-    // string getOpticName(zShape3D* shape) { return opticNameMap_[shape]; }
+-    // string getOpticName(int index) { return getOpticName(get(index)); }
+     int num() const { return list_.size(); }
+ 
+     vector<RokiVisualShape>::iterator begin() { return list_.begin(); }
+-- 
+2.7.4
+

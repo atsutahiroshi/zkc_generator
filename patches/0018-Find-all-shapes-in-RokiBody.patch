@@ -1,0 +1,68 @@
+From 76a9c61136946b586ec88aeaa277409001ca6c41 Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Tue, 10 Oct 2017 18:56:52 +0200
+Subject: [PATCH 18/41] Find all shapes in RokiBody
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index 5d14587..ff60b65 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -268,6 +268,7 @@ public:
+     void updateForceSensors();
+ 
+     void findAllOpticalInfo(RokiOpticalInfoList& list);
++    void findAllShape(RokiShapeList& list);
+     void exportAsZkcFile(const std::string& filename);
+ };
+ 
+@@ -1200,6 +1201,23 @@ void RokiBody::findAllOpticalInfo(RokiOpticalInfoList& list)
+ }
+ 
+ 
++void RokiBody::findAllShape(RokiShapeList& list)
++{
++    for(int i=0; i<body()->numLinks(); ++i){
++        RokiLink *link = dynamic_cast<RokiLink*>(body()->link(i));
++        if(link){
++            zShapeListCell *cp;
++            zListForEach(rkLinkShapeList(link->rklink), cp){
++                list.add(cp->data, link->opticNameMap[cp->data]);
++            }
++        } else {
++            cerr << "cannot be converted to 'RokiLink*': "
++                 << typeid(body()->link(i)).name() << endl;
++        }
++    }
++}
++
++
+ void RokiBody::exportAsZkcFile(const std::string& filename)
+ {
+     // allocate memory for rkMShape3D
+@@ -1216,6 +1234,19 @@ void RokiBody::exportAsZkcFile(const std::string& filename)
+         opticList.get(i).exportToZOpticalInfo(target);
+     }
+ 
++    // find all shapes
++    RokiShapeList shapeList;
++    findAllShape(shapeList);
++    zArrayAlloc(&rkChainShape(chain)->shape, zShape3D, shapeList.num());
++    for(int i=0; i<shapeList.num(); ++i){
++        zShape3D *target = zMShape3DShape(rkChainShape(chain), i);
++        zOpticalInfo *oarray = rkChainShape(chain)->optic.buf;
++        zOpticalInfo *opt;
++        string optName = shapeList.getOpticName(shapeList.get(i));
++        zNameFind(oarray, opticList.num(), const_cast<char*>(optName.c_str(), opt);
++        zShape3DClone(shapeList.get(i), target, opt);
++    }
++
+     // export
+     rkChainWriteFile(chain, (char *)filename.c_str());
+ }
+-- 
+2.7.4
+

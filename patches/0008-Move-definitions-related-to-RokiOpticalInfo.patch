@@ -1,0 +1,202 @@
+From 77710cc4c853cdac4182462e607fced88146fba4 Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Mon, 9 Oct 2017 14:44:51 +0200
+Subject: [PATCH 08/41] Move definitions related to RokiOpticalInfo
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 172 +++++++++++++++++------------------
+ 1 file changed, 86 insertions(+), 86 deletions(-)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index ea5f6ba..415b11d 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -301,6 +301,92 @@ enum{ FD_SOLVER_VERT, FD_SOLVER_VOLUME };
+ }
+ 
+ 
++RokiOpticalInfo::RokiOpticalInfo()
++{
++}
++
++
++RokiOpticalInfo::RokiOpticalInfo(const RokiOpticalInfo& org)
++    : SgMaterial(org)
++{
++}
++
++
++RokiOpticalInfo::RokiOpticalInfo(const SgMaterial& org)
++    : SgMaterial(org)
++{
++}
++
++
++bool RokiOpticalInfo::operator==(const RokiOpticalInfo& other) const
++{
++    const float epsilon = 1.0e-4;
++
++    return ((diffuseColor() - other.diffuseColor()).norm() < epsilon) &&
++        ((emissiveColor() - other.emissiveColor()).norm() < epsilon) &&
++        ((specularColor() - other.specularColor()).norm() < epsilon) &&
++        ((ambientIntensity() - other.ambientIntensity()) < epsilon) &&
++        ((shininess() - other.shininess()) < epsilon) &&
++        ((transparency() - other.transparency()) < epsilon);
++}
++
++
++bool RokiOpticalInfo::operator!=(const RokiOpticalInfo& other) const
++{
++    return !(*this == other);
++}
++
++
++string RokiOpticalInfo::createName(Vector3f amb, Vector3f dif, Vector3f spc, float ns, float sns, float alpha)
++{
++    char name[256];
++
++    amb *= 255.0f;
++    dif *= 255.0f;
++    spc *= 255.0f;
++    ns  *= 255.0f;
++    // sns *= 255.0f;
++    alpha *= 255.0f;
++    sprintf(name, "#%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
++            (int)amb[0], (int)amb[1], (int)amb[2],
++            (int)dif[0], (int)dif[1], (int)dif[2],
++            (int)spc[0], (int)spc[1], (int)spc[2],
++            (int)ns, (int)sns, (int)alpha);
++
++    return string(name);
++}
++
++
++void RokiOpticalInfo::exportToZOpticalInfo(zOpticalInfo* opt)
++{
++    Vector3f amb = diffuseColor() * ambientIntensity();
++    Vector3f dif = diffuseColor();
++    Vector3f spc = specularColor();
++    float ns  = 1.0;
++    float sns = (127.0f * shininess()) + 1.0f;
++    float alpha = 1.0 - transparency();
++    string name = createName(amb, dif, spc, ns, sns, alpha);
++
++    zOpticalInfoCreate(opt,
++                       amb[0], amb[1], amb[2],
++                       dif[0], dif[1], dif[2],
++                       spc[0], spc[1], spc[2],
++                       ns, sns, alpha,
++                       (char *)name.c_str());
++}
++
++
++bool RokiOpticalInfoList::add(RokiOpticalInfo opt)
++{
++    for(auto o : list_){
++        if(o == opt) return false;
++    }
++    list_.push_back(opt);
++
++    return true;
++}
++
++
+ RokiLink::RokiLink
+ (RokiSimulatorItemImpl* simImpl, RokiBody* rokiBody, RokiLink* parent, const Vector3& parentOrigin, Link* link, bool stuffisLinkName)
+ {
+@@ -1019,92 +1105,6 @@ void RokiBody::exportAsZkcFile(const std::string& filename)
+ }
+ 
+ 
+-RokiOpticalInfo::RokiOpticalInfo()
+-{
+-}
+-
+-
+-RokiOpticalInfo::RokiOpticalInfo(const RokiOpticalInfo& org)
+-    : SgMaterial(org)
+-{
+-}
+-
+-
+-RokiOpticalInfo::RokiOpticalInfo(const SgMaterial& org)
+-    : SgMaterial(org)
+-{
+-}
+-
+-
+-bool RokiOpticalInfo::operator==(const RokiOpticalInfo& other) const
+-{
+-    const float epsilon = 1.0e-4;
+-
+-    return ((diffuseColor() - other.diffuseColor()).norm() < epsilon) &&
+-        ((emissiveColor() - other.emissiveColor()).norm() < epsilon) &&
+-        ((specularColor() - other.specularColor()).norm() < epsilon) &&
+-        ((ambientIntensity() - other.ambientIntensity()) < epsilon) &&
+-        ((shininess() - other.shininess()) < epsilon) &&
+-        ((transparency() - other.transparency()) < epsilon);
+-}
+-
+-
+-bool RokiOpticalInfo::operator!=(const RokiOpticalInfo& other) const
+-{
+-    return !(*this == other);
+-}
+-
+-
+-string RokiOpticalInfo::createName(Vector3f amb, Vector3f dif, Vector3f spc, float ns, float sns, float alpha)
+-{
+-    char name[256];
+-
+-    amb *= 255.0f;
+-    dif *= 255.0f;
+-    spc *= 255.0f;
+-    ns  *= 255.0f;
+-    // sns *= 255.0f;
+-    alpha *= 255.0f;
+-    sprintf(name, "#%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+-            (int)amb[0], (int)amb[1], (int)amb[2],
+-            (int)dif[0], (int)dif[1], (int)dif[2],
+-            (int)spc[0], (int)spc[1], (int)spc[2],
+-            (int)ns, (int)sns, (int)alpha);
+-
+-    return string(name);
+-}
+-
+-
+-void RokiOpticalInfo::exportToZOpticalInfo(zOpticalInfo* opt)
+-{
+-    Vector3f amb = diffuseColor() * ambientIntensity();
+-    Vector3f dif = diffuseColor();
+-    Vector3f spc = specularColor();
+-    float ns  = 1.0;
+-    float sns = (127.0f * shininess()) + 1.0f;
+-    float alpha = 1.0 - transparency();
+-    string name = createName(amb, dif, spc, ns, sns, alpha);
+-
+-    zOpticalInfoCreate(opt,
+-                       amb[0], amb[1], amb[2],
+-                       dif[0], dif[1], dif[2],
+-                       spc[0], spc[1], spc[2],
+-                       ns, sns, alpha,
+-                       (char *)name.c_str());
+-}
+-
+-
+-bool RokiOpticalInfoList::add(RokiOpticalInfo opt)
+-{
+-    for(auto o : list_){
+-        if(o == opt) return false;
+-    }
+-    list_.push_back(opt);
+-
+-    return true;
+-}
+-
+-
+ void RokiSimulatorItem::initializeClass(ExtensionManager* ext)
+ {
+     ext->itemManager().registerClass<RokiSimulatorItem>(N_("RokiSimulatorItem"));
+-- 
+2.7.4
+

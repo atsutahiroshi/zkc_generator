@@ -1,0 +1,49 @@
+From 2d6f82948fafcc1444b4994d30852c7e09cf7c49 Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Thu, 5 Oct 2017 11:05:49 +0200
+Subject: [PATCH 03/41] Add helper function to write zkc file
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index 17cd997..53918ee 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -253,6 +253,7 @@ public:
+     bool stepSimulation(const std::vector<SimulationBody*>& activeSimBodies);
+     void addBody(RokiBody* simBody);
+     CollisionLinkPairListPtr getCollisions();
++    void writeChainToFile(rkChain *chain, const std::string& filename);
+ 
+     void doPutProperties(PutPropertyFunction& putProperty);
+     bool store(Archive& archive);
+@@ -1130,6 +1131,12 @@ bool RokiSimulatorItemImpl::initializeSimulation(const std::vector<SimulationBod
+ 
+     simulationTime = 0;
+ 
++    // export model file as zkc
++    if(!zkcFileName.empty()){
++        rkFDCell* lc = zListTail(&fd.list);
++        writeChainToFile(&lc->data.chain, getNativePathString(zkcFileName));
++    }
++
+     return true;
+ }
+ 
+@@ -1303,6 +1310,11 @@ void RokiSimulatorItemImpl::collisionCallback(const CollisionPair& collisionPair
+ }
+ #endif
+ 
++void RokiSimulatorItemImpl::writeChainToFile(rkChain *chain, const std::string& filename)
++{
++    rkChainWriteFile(chain, (char *)filename.c_str());
++}
++
+ void RokiSimulatorItem::doPutProperties(PutPropertyFunction& putProperty)
+ {
+     SimulatorItem::doPutProperties(putProperty);
+-- 
+2.7.4
+

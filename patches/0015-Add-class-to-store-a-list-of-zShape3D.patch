@@ -1,0 +1,54 @@
+From f1c535061988a8db14ac77a0b089f0a5f35c8e29 Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Tue, 10 Oct 2017 16:55:49 +0200
+Subject: [PATCH 15/41] Add class to store a list of zShape3D*
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index 9753086..ff5fbfe 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -187,6 +187,23 @@ private:
+ };
+ 
+ 
++class RokiShapeList
++{
++public:
++    bool add(zShape3D* shape);
++    zShape3D* get(int index) { return list_[index]; }
++    int num() const { return list_.size(); }
++
++    vector<zShape3D*>::iterator begin() { return list_.begin(); }
++    vector<zShape3D*>::iterator end() { return list_.end(); }
++    vector<zShape3D*>::const_iterator begin() const { return list_.begin(); }
++    vector<zShape3D*>::const_iterator end() const { return list_.end(); }
++
++private:
++    vector<zShape3D*> list_;
++};
++
++
+ struct Triangle {
+     int indices[3];
+ };
+@@ -459,6 +476,13 @@ bool RokiOpticalInfoList::add(RokiOpticalInfo opt)
+ }
+ 
+ 
++bool RokiShapeList::add(zShape3D* shape)
++{
++    list_.push_back(shape);
++    return true;
++}
++
++
+ RokiLink::RokiLink
+ (RokiSimulatorItemImpl* simImpl, RokiBody* rokiBody, RokiLink* parent, const Vector3& parentOrigin, Link* link, bool stuffisLinkName)
+ {
+-- 
+2.7.4
+

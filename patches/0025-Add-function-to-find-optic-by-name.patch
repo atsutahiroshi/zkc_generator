@@ -1,0 +1,42 @@
+From 2de4af745859fdb114b330d39fe37bbebd2edf53 Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Wed, 11 Oct 2017 19:18:17 +0200
+Subject: [PATCH 25/41] Add function to find optic by name
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index 636ec12..e56a593 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -185,6 +185,8 @@ public:
+     vector<RokiOpticalInfo>::const_iterator begin() const { return list_.begin(); }
+     vector<RokiOpticalInfo>::const_iterator end() const { return list_.end(); }
+ 
++    const RokiOpticalInfo& findByOpticName(const string& name);
++
+ private:
+     vector<RokiOpticalInfo> list_;
+ };
+@@ -526,6 +528,16 @@ bool RokiOpticalInfoList::add(RokiOpticalInfo opt)
+ }
+ 
+ 
++const RokiOpticalInfo& RokiOpticalInfoList::findByOpticName(const string& name)
++{
++    for(auto const &opt : list_){
++        if(opt.name() == name)
++            return opt;
++    }
++    throw;
++}
++
++
+ RokiVisualShape::RokiVisualShape(SgNode* node, const RokiLink& link)
+     : link_(link)
+ {
+-- 
+2.7.4
+

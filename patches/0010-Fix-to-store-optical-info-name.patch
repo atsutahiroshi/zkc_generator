@@ -1,0 +1,76 @@
+From b9ce3cd26787f0e17321adce4170400c26d80707 Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Mon, 9 Oct 2017 15:05:03 +0200
+Subject: [PATCH 10/41] Fix to store optical info name
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index 7fde34a..05de751 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -146,9 +146,10 @@ public:
+ private:
+     Vector3f amb_, dif_, spc_;
+     float ns_, sns_, alpha_;
++    string name_;
+ 
+-    void scaleToRokiCompatible();
+     string createName();
++    void scaleToRokiCompatible();
+ };
+ 
+ 
+@@ -344,17 +345,6 @@ bool RokiOpticalInfo::operator!=(const RokiOpticalInfo& other) const
+ }
+ 
+ 
+-void RokiOpticalInfo::scaleToRokiCompatible()
+-{
+-    amb_ = diffuseColor() * ambientIntensity();
+-    dif_ = diffuseColor();
+-    spc_ = specularColor();
+-    ns_  = 1.0;
+-    sns_ = (127.0f * shininess()) + 1.0f;
+-    alpha_ = 1.0 - transparency();
+-}
+-
+-
+ string RokiOpticalInfo::createName()
+ {
+     Vector3f amb = amb_ * 255.0f;
+@@ -375,16 +365,26 @@ string RokiOpticalInfo::createName()
+ }
+ 
+ 
+-void RokiOpticalInfo::exportToZOpticalInfo(zOpticalInfo* opt)
++void RokiOpticalInfo::scaleToRokiCompatible()
+ {
+-    string name = createName();
++    amb_ = diffuseColor() * ambientIntensity();
++    dif_ = diffuseColor();
++    spc_ = specularColor();
++    ns_  = 1.0;
++    sns_ = (127.0f * shininess()) + 1.0f;
++    alpha_ = 1.0 - transparency();
++    name_ = createName();
++}
+ 
++
++void RokiOpticalInfo::exportToZOpticalInfo(zOpticalInfo* opt)
++{
+     zOpticalInfoCreate(opt,
+                        amb_[0], amb_[1], amb_[2],
+                        dif_[0], dif_[1], dif_[2],
+                        spc_[0], spc_[1], spc_[2],
+                        ns_, sns_, alpha_,
+-                       (char *)name.c_str());
++                       (char *)name_.c_str());
+ }
+ 
+ 
+-- 
+2.7.4
+

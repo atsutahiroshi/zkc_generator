@@ -1,0 +1,180 @@
+From be87d8778e7f6382689a83e1acb1e742b9fa391f Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Sun, 8 Oct 2017 17:16:53 +0200
+Subject: [PATCH 07/41] Make it possible to export optical infos as zkc file
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 115 ++++++++++++++++++++++++-----------
+ 1 file changed, 79 insertions(+), 36 deletions(-)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index f6f8474..ea5f6ba 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -131,6 +131,41 @@ rkMotor *rkMotorCreateJm2(rkMotor *m)
+ 
+ namespace {
+ 
++class RokiOpticalInfo : public SgMaterial
++{
++public:
++    RokiOpticalInfo();
++    RokiOpticalInfo(const RokiOpticalInfo& org);
++    RokiOpticalInfo(const SgMaterial& org);
++
++    bool operator==(const RokiOpticalInfo& other) const;
++    bool operator!=(const RokiOpticalInfo& other) const;
++
++    void exportToZOpticalInfo(zOpticalInfo* opt);
++
++private:
++    string createName(Vector3f amb, Vector3f dif, Vector3f spc, float ns, float sns, float alpha);
++};
++
++
++class RokiOpticalInfoList
++{
++public:
++    bool add(RokiOpticalInfo opt);
++    RokiOpticalInfo& get(int index) { return list_[index]; }
++    const RokiOpticalInfo& get(int index) const { return list_[index]; }
++    int num() const { return list_.size(); }
++
++    vector<RokiOpticalInfo>::iterator begin() { return list_.begin(); }
++    vector<RokiOpticalInfo>::iterator end() { return list_.end(); }
++    vector<RokiOpticalInfo>::const_iterator begin() const { return list_.begin(); }
++    vector<RokiOpticalInfo>::const_iterator end() const { return list_.end(); }
++
++private:
++    vector<RokiOpticalInfo> list_;
++};
++
++
+ struct Triangle {
+     int indices[3];
+ };
+@@ -187,6 +222,8 @@ public:
+     void setTorqueToRoki();
+     void updateForceSensors();
+ 
++    void findAllOpticalInfo(RokiOpticalInfoList& list);
++    void exportAsZkcFile(const std::string& filename);
+ };
+ 
+ class RokiBreakLinkTraverse :public LinkTraverse
+@@ -211,35 +248,6 @@ private:
+     RokiBody* rokiBody;
+ };
+ 
+-class RokiOpticalInfo : public SgMaterial
+-{
+-public:
+-    RokiOpticalInfo();
+-    RokiOpticalInfo(const RokiOpticalInfo& org);
+-    RokiOpticalInfo(const SgMaterial& org);
+-
+-    bool operator==(const RokiOpticalInfo& other) const;
+-    bool operator!=(const RokiOpticalInfo& other) const;
+-
+-    void exportToZOpticalInfo(zOpticalInfo* opt);
+-
+-private:
+-    string createName(Vector3f amb, Vector3f dif, Vector3f spc, float ns, float sns, float alpha);
+-};
+-
+-
+-class RokiOpticalInfoList
+-{
+-public:
+-    bool add(RokiOpticalInfo opt);
+-    RokiOpticalInfo& get(int index) { return list_[index]; }
+-    const RokiOpticalInfo& get(int index) const { return list_[index]; }
+-    int num() const { return list_.size(); }
+-
+-private:
+-    vector<RokiOpticalInfo> list_;
+-};
+-
+ }
+ 
+ namespace cnoid {
+@@ -282,7 +290,6 @@ public:
+     bool stepSimulation(const std::vector<SimulationBody*>& activeSimBodies);
+     void addBody(RokiBody* simBody);
+     CollisionLinkPairListPtr getCollisions();
+-    void writeChainToFile(rkChain *chain, const std::string& filename);
+ 
+     void doPutProperties(PutPropertyFunction& putProperty);
+     bool store(Archive& archive);
+@@ -978,6 +985,40 @@ void RokiBody::updateForceSensors()
+ }
+ 
+ 
++void RokiBody::findAllOpticalInfo(RokiOpticalInfoList& list)
++{
++    for(int i=0; i<body()->numLinks(); ++i){
++        Link* link = body()->link(i);
++        SgGroup *group = dynamic_cast<SgGroup*>(link->visualShape());
++        for(auto child : *group){
++            SgShape *shape = dynamic_cast<SgShape*>(child.get());
++            list.add(RokiOpticalInfo(*shape->material()));
++        }
++    }
++}
++
++
++void RokiBody::exportAsZkcFile(const std::string& filename)
++{
++    // allocate memory for rkMShape3D
++    if(!rkChainShape(chain))
++        rkChainShape(chain) = zAlloc(zMShape3D, 1);
++    zMShape3DInit(rkChainShape(chain));
++
++    // find all optical infos
++    RokiOpticalInfoList opticList;
++    findAllOpticalInfo(opticList);
++    zArrayAlloc(&rkChainShape(chain)->optic, zOpticalInfo, opticList.num());
++    for(int i=0; i<opticList.num(); ++i){
++        zOpticalInfo *target = zMShape3DOptic(rkChainShape(chain), i);
++        opticList.get(i).exportToZOpticalInfo(target);
++    }
++
++    // export
++    rkChainWriteFile(chain, (char *)filename.c_str());
++}
++
++
+ RokiOpticalInfo::RokiOpticalInfo()
+ {
+ }
+@@ -1248,8 +1289,14 @@ bool RokiSimulatorItemImpl::initializeSimulation(const std::vector<SimulationBod
+ 
+     // export model file as zkc
+     if(!zkcFileName.empty()){
+-        rkFDCell* lc = zListTail(&fd.list);
+-        writeChainToFile(&lc->data.chain, getNativePathString(zkcFileName));
++        for(auto simBody : self->simulationBodies()){
++            if(simBody->isActive()){
++                string filename = getNativePathString(zkcFileName);
++                static_cast<RokiBody*>(simBody)->exportAsZkcFile(filename);
++                break;          // first one only
++                // TODO: export all active simulation bodies
++            }
++        }
+     }
+ 
+     return true;
+@@ -1425,10 +1472,6 @@ void RokiSimulatorItemImpl::collisionCallback(const CollisionPair& collisionPair
+ }
+ #endif
+ 
+-void RokiSimulatorItemImpl::writeChainToFile(rkChain *chain, const std::string& filename)
+-{
+-    rkChainWriteFile(chain, (char *)filename.c_str());
+-}
+ 
+ void RokiSimulatorItem::doPutProperties(PutPropertyFunction& putProperty)
+ {
+-- 
+2.7.4
+
