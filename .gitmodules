@@ -1,0 +1,3 @@
+[submodule "choreonoid"]
+	path = choreonoid
+	url = https://github.com/s-nakaoka/choreonoid.git
