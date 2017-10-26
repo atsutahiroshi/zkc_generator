@@ -1,1 +1,5 @@
 zkc file generator powered by choreonoid
+
+How to run:
+$ ./setup.sh  # you need to run setup only first time
+$ ./convert.sh choreonoid/share/model/misc/arm_2dof.body
