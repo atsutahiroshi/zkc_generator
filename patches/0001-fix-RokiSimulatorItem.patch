@@ -1,7 +1,7 @@
-From 1ba8dce4c00914a90a70586b1f00928b79f8135e Mon Sep 17 00:00:00 2001
+From 2bd693e8db2b2a73759f70477972d6c6345eb99f Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Wed, 4 Oct 2017 17:18:21 +0200
-Subject: [PATCH 01/41] Add variable to contain file name
+Subject: [PATCH 01/45] Add variable to contain file name
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 6 ++++++
@@ -63,10 +63,10 @@ index ea95e78..4215787 100644
 2.7.4
 
 
-From 1e9039b6d853c834b07adeee0aa82ca73794d673 Mon Sep 17 00:00:00 2001
+From c5c4600b060ac9290e90dc9e4cd00e9c6530d96c Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Wed, 4 Oct 2017 17:56:57 +0200
-Subject: [PATCH 02/41] Disable echo
+Subject: [PATCH 02/45] Disable echo
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 1 +
@@ -88,10 +88,10 @@ index 4215787..17cd997 100644
 2.7.4
 
 
-From 2d6f82948fafcc1444b4994d30852c7e09cf7c49 Mon Sep 17 00:00:00 2001
+From 6d6a8abf100a9550948b0ad287a2b76ab322e34a Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Thu, 5 Oct 2017 11:05:49 +0200
-Subject: [PATCH 03/41] Add helper function to write zkc file
+Subject: [PATCH 03/45] Add helper function to write zkc file
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 12 ++++++++++++
@@ -138,10 +138,10 @@ index 17cd997..53918ee 100644
 2.7.4
 
 
-From 1d5449481ad793212cec116971f5aa968ae6bcc1 Mon Sep 17 00:00:00 2001
+From f70978a3ae9921023ae562c2c68c8c293afeee70 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Thu, 5 Oct 2017 19:09:00 +0200
-Subject: [PATCH 04/41] Add class to convert SgMaterial to zOpticalInfo
+Subject: [PATCH 04/45] Add class to convert SgMaterial to zOpticalInfo
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 93 ++++++++++++++++++++++++++++++++++++
@@ -262,10 +262,10 @@ index 53918ee..2e9b2c8 100644
 2.7.4
 
 
-From 17ef0ae958f502638be6a0d9d4fa90052b0d19c2 Mon Sep 17 00:00:00 2001
+From 38d29d3796a4b1914dd5a049905a223cb425c1b1 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Thu, 5 Oct 2017 19:48:42 +0200
-Subject: [PATCH 05/41] Fix name of optical info
+Subject: [PATCH 05/45] Fix name of optical info
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 20 +++++++++-----------
@@ -312,10 +312,10 @@ index 2e9b2c8..ad1a6ae 100644
 2.7.4
 
 
-From 8022fba6c32706807b0c1f6326c869c5754b63c2 Mon Sep 17 00:00:00 2001
+From fa67d10905aad1f0b5698fbbdeb92c31926e7221 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Fri, 6 Oct 2017 18:04:21 +0200
-Subject: [PATCH 06/41] Add class to contain multiple optical infos
+Subject: [PATCH 06/45] Add class to contain multiple optical infos
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 24 ++++++++++++++++++++++++
@@ -367,10 +367,10 @@ index ad1a6ae..f6f8474 100644
 2.7.4
 
 
-From be87d8778e7f6382689a83e1acb1e742b9fa391f Mon Sep 17 00:00:00 2001
+From 420a354eea064264f5d4889b8063fd8d73e239fc Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Sun, 8 Oct 2017 17:16:53 +0200
-Subject: [PATCH 07/41] Make it possible to export optical infos as zkc file
+Subject: [PATCH 07/45] Make it possible to export optical infos as zkc file
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 115 ++++++++++++++++++++++++-----------
@@ -548,10 +548,10 @@ index f6f8474..ea5f6ba 100644
 2.7.4
 
 
-From 77710cc4c853cdac4182462e607fced88146fba4 Mon Sep 17 00:00:00 2001
+From c1ebe70e958ea4680edbed65daab6ded38001886 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Mon, 9 Oct 2017 14:44:51 +0200
-Subject: [PATCH 08/41] Move definitions related to RokiOpticalInfo
+Subject: [PATCH 08/45] Move definitions related to RokiOpticalInfo
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 172 +++++++++++++++++------------------
@@ -751,10 +751,10 @@ index ea5f6ba..415b11d 100644
 2.7.4
 
 
-From 9ec654f0341537cf260857d8af5f046efe9f3ebf Mon Sep 17 00:00:00 2001
+From 2335260de04a7ea79a007920613d4e05e36f04ea Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Mon, 9 Oct 2017 15:00:24 +0200
-Subject: [PATCH 09/41] Add helper function to rescale RGBs compatible to Roki
+Subject: [PATCH 09/45] Add helper function to rescale RGBs compatible to Roki
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 50 ++++++++++++++++++++++--------------
@@ -863,10 +863,10 @@ index 415b11d..7fde34a 100644
 2.7.4
 
 
-From b9ce3cd26787f0e17321adce4170400c26d80707 Mon Sep 17 00:00:00 2001
+From 43725c9141af6bee75dab7f7ff4702aecf979153 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Mon, 9 Oct 2017 15:05:03 +0200
-Subject: [PATCH 10/41] Fix to store optical info name
+Subject: [PATCH 10/45] Fix to store optical info name
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 30 +++++++++++++++---------------
@@ -940,10 +940,10 @@ index 7fde34a..05de751 100644
 2.7.4
 
 
-From f14f2ff14531cc6090bbbd7bb3b59f50f9809e2e Mon Sep 17 00:00:00 2001
+From e1cfccb02707bba8d0ba919e6ecd041645ca162b Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Mon, 9 Oct 2017 15:07:22 +0200
-Subject: [PATCH 11/41] Add function to return optical info name
+Subject: [PATCH 11/45] Add function to return optical info name
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 1 +
@@ -965,10 +965,10 @@ index 05de751..3e48e31 100644
 2.7.4
 
 
-From ae7b1ef3f7970c963670a907f98939e11f1b3e17 Mon Sep 17 00:00:00 2001
+From 1438b81d7b822017fb919176d51ee2858bae004b Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Mon, 9 Oct 2017 17:46:59 +0200
-Subject: [PATCH 12/41] Fix to return original name if it exists
+Subject: [PATCH 12/45] Fix to return original name if it exists
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 3 +++
@@ -992,10 +992,10 @@ index 3e48e31..14ea746 100644
 2.7.4
 
 
-From b24722c4721602b2694c4256311fad76923f690e Mon Sep 17 00:00:00 2001
+From c1cf874a77d804279673375db3a3b9ee0a2a8232 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Tue, 10 Oct 2017 16:21:50 +0200
-Subject: [PATCH 13/41] Fix to use polymorphic function to visit shape
+Subject: [PATCH 13/45] Fix to use polymorphic function to visit shape
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 121 ++++++++++++++++++++++++++---------
@@ -1206,10 +1206,10 @@ index 14ea746..724c48c 100644
 2.7.4
 
 
-From 5a141d9f8b0e6bbe0eff7b16df8506844be0c4ae Mon Sep 17 00:00:00 2001
+From af9c5a722d74b8055a056a53e6dd6d43040d827c Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Tue, 10 Oct 2017 16:39:37 +0200
-Subject: [PATCH 14/41] Fix shape name
+Subject: [PATCH 14/45] Fix shape name
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 16 ++++++++++++++--
@@ -1267,10 +1267,10 @@ index 724c48c..9753086 100644
 2.7.4
 
 
-From f1c535061988a8db14ac77a0b089f0a5f35c8e29 Mon Sep 17 00:00:00 2001
+From 021a40357f11478b28341124d9974893b5b2a3f0 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Tue, 10 Oct 2017 16:55:49 +0200
-Subject: [PATCH 15/41] Add class to store a list of zShape3D*
+Subject: [PATCH 15/45] Add class to store a list of zShape3D*
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 24 ++++++++++++++++++++++++
@@ -1322,10 +1322,10 @@ index 9753086..ff5fbfe 100644
 2.7.4
 
 
-From 59c9ec254c7458c6dfb8bea2f475455ea4707640 Mon Sep 17 00:00:00 2001
+From 941eed8d98aec2f40fa725d20f5cbd859eb4ee92 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Tue, 10 Oct 2017 17:09:47 +0200
-Subject: [PATCH 16/41] Remove continue
+Subject: [PATCH 16/45] Remove continue
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 1 -
@@ -1347,10 +1347,10 @@ index ff5fbfe..4a8b47b 100644
 2.7.4
 
 
-From 476953e8f1f5b38e88227881ca502793c0ba24e4 Mon Sep 17 00:00:00 2001
+From aeec3646bca3f0ff62254fc76d651bdc468fe1de Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Tue, 10 Oct 2017 18:56:07 +0200
-Subject: [PATCH 17/41] Fix to find optic name when adding shape to RokiLink
+Subject: [PATCH 17/45] Fix to find optic name when adding shape to RokiLink
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 12 ++++++++++--
@@ -1414,10 +1414,10 @@ index 4a8b47b..5d14587 100644
 2.7.4
 
 
-From 76a9c61136946b586ec88aeaa277409001ca6c41 Mon Sep 17 00:00:00 2001
+From ab5ec7ca5525d61c9da1b385d23551e979786711 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Tue, 10 Oct 2017 18:56:52 +0200
-Subject: [PATCH 18/41] Find all shapes in RokiBody
+Subject: [PATCH 18/45] Find all shapes in RokiBody
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 31 +++++++++++++++++++++++++++++++
@@ -1483,10 +1483,10 @@ index 5d14587..ff60b65 100644
 2.7.4
 
 
-From 29a874e82987aca9387e49c1f245bc56c2962f51 Mon Sep 17 00:00:00 2001
+From 1e2aae1f2627e24e964331475922d52f4ee61878 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Wed, 11 Oct 2017 10:37:23 +0200
-Subject: [PATCH 19/41] Fix minor
+Subject: [PATCH 19/45] Fix minor
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 3 ++-
@@ -1510,10 +1510,10 @@ index ff60b65..b87c135 100644
 2.7.4
 
 
-From 46cfc1d10e9408640b8ca6d938d0320edb4f0037 Mon Sep 17 00:00:00 2001
+From ea6b3c4f81f571105fd153120b92d253f42cf4ed Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Wed, 11 Oct 2017 10:37:29 +0200
-Subject: [PATCH 20/41] Fix how to find RokiLink
+Subject: [PATCH 20/45] Fix how to find RokiLink
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 2 +-
@@ -1536,10 +1536,10 @@ index b87c135..9017056 100644
 2.7.4
 
 
-From 5dd250764aa824204596761da1e9464d757e1c1d Mon Sep 17 00:00:00 2001
+From 13746ab29c86676ec58ebc1621f26cb9a3b654f2 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Wed, 11 Oct 2017 11:25:07 +0200
-Subject: [PATCH 21/41] Remove unused local variable
+Subject: [PATCH 21/45] Remove unused local variable
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 1 -
@@ -1561,10 +1561,10 @@ index 9017056..0777e01 100644
 2.7.4
 
 
-From d0659c6f50dcfe0197540a5ed8bfd71e34bda0aa Mon Sep 17 00:00:00 2001
+From b6d4a5276698830d74c59a5c82e2285af9e69473 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Wed, 11 Oct 2017 13:53:10 +0200
-Subject: [PATCH 22/41] Fix to store optic info inside the class
+Subject: [PATCH 22/45] Fix to store optic info inside the class
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 10 ++++++++--
@@ -1630,10 +1630,10 @@ index 0777e01..4f3b6df 100644
 2.7.4
 
 
-From e408f5b4e76a3bb93176a1d86c0219bbeb8dfd95 Mon Sep 17 00:00:00 2001
+From 36d4b52dd2164b6694d485b4cf07dcae2facc749 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Wed, 11 Oct 2017 18:30:38 +0200
-Subject: [PATCH 23/41] Add class to store visual shape information
+Subject: [PATCH 23/45] Add class to store visual shape information
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 319 +++++++++++++++++++++++++++++++++--
@@ -2030,10 +2030,10 @@ index 4f3b6df..a53aace 100644
 2.7.4
 
 
-From 60c03f8fa8200f99ddf6fcca95d6936f23f6432f Mon Sep 17 00:00:00 2001
+From c451a569d7c04fe03b7756b1f9e3102b6981fe11 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Wed, 11 Oct 2017 19:17:50 +0200
-Subject: [PATCH 24/41] Rename class name
+Subject: [PATCH 24/45] Rename class name
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 60 ++++++++++++++++++------------------
@@ -2150,10 +2150,10 @@ index a53aace..636ec12 100644
 2.7.4
 
 
-From 2de4af745859fdb114b330d39fe37bbebd2edf53 Mon Sep 17 00:00:00 2001
+From 87f0d89651c4a758b69f1e2d7d202a7d207dff26 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Wed, 11 Oct 2017 19:18:17 +0200
-Subject: [PATCH 25/41] Add function to find optic by name
+Subject: [PATCH 25/45] Add function to find optic by name
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 12 ++++++++++++
@@ -2193,10 +2193,10 @@ index 636ec12..e56a593 100644
 2.7.4
 
 
-From b89d4db6f7b96d46e6280b54c664472912c1d845 Mon Sep 17 00:00:00 2001
+From 1f1eaf96fc5b9c68dae9df5e1472e0bf49ea350e Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Wed, 11 Oct 2017 19:18:39 +0200
-Subject: [PATCH 26/41] Fix to use RokiVisualShapeList
+Subject: [PATCH 26/45] Fix to use RokiVisualShapeList
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 12 +++++-------
@@ -2233,10 +2233,10 @@ index e56a593..8dde073 100644
 2.7.4
 
 
-From 8c59a1cb9b47d7f8b48d33ff7d9aa3af7792d479 Mon Sep 17 00:00:00 2001
+From f159e4384ef746aabcbc1b2e5129693edc2478e5 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Wed, 11 Oct 2017 21:24:30 +0200
-Subject: [PATCH 27/41] Add switch between collision and visual shapes
+Subject: [PATCH 27/45] Add switch between collision and visual shapes
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 26 +++++++++++++++++++++++++-
@@ -2311,10 +2311,10 @@ index 8dde073..243f75f 100644
 2.7.4
 
 
-From a95fdd076babd22d52cf33b9ee94219179624602 Mon Sep 17 00:00:00 2001
+From e6b0da0a280a4b4e1e67cfe6e843803ebd08d9ac Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Thu, 12 Oct 2017 11:09:57 +0200
-Subject: [PATCH 28/41] Fix how to update shape list
+Subject: [PATCH 28/45] Fix how to update shape list
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 65 ++++++++++++++++++++++++++++++++----
@@ -2424,10 +2424,10 @@ index 243f75f..0ea403f 100644
 2.7.4
 
 
-From ecc2eb5996c0d8c36f6ae37b1a6490020108e097 Mon Sep 17 00:00:00 2001
+From 9b5a7109fa5af02f89d240fb9a343c42d257adb3 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Thu, 12 Oct 2017 12:35:32 +0200
-Subject: [PATCH 29/41] Fix to use functions to update shape list
+Subject: [PATCH 29/45] Fix to use functions to update shape list
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 16 ++++++++--------
@@ -2492,10 +2492,10 @@ index 0ea403f..f26ccb2 100644
 2.7.4
 
 
-From d9c3e4af53b2057b21c26ef0defff0c195818d81 Mon Sep 17 00:00:00 2001
+From 79fcee648bd52b75058d7dce70f24cfbd33ca9da Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Thu, 12 Oct 2017 12:36:31 +0200
-Subject: [PATCH 30/41] Remove code for debug
+Subject: [PATCH 30/45] Remove code for debug
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 23 -----------------------
@@ -2542,10 +2542,10 @@ index f26ccb2..e1388ed 100644
 2.7.4
 
 
-From 7139da0a39955d0645fcbd2e146c6bd59e36f11c Mon Sep 17 00:00:00 2001
+From bb76a78bcf8bb69c00d727929e510f186ab95007 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Thu, 12 Oct 2017 13:24:19 +0200
-Subject: [PATCH 31/41] Remove comment out
+Subject: [PATCH 31/45] Remove comment out
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 2 --
@@ -2568,10 +2568,10 @@ index e1388ed..2d40299 100644
 2.7.4
 
 
-From 272b75c60d3bc48efcae7e9e6bb94c59adbb0b17 Mon Sep 17 00:00:00 2001
+From 82c57fd58176b10a6147558f29eba3aea775efaf Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Thu, 12 Oct 2017 13:32:34 +0200
-Subject: [PATCH 32/41] Add brackets
+Subject: [PATCH 32/45] Add brackets
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 15 ++++++++++-----
@@ -2624,10 +2624,10 @@ index 2d40299..d4a5465 100644
 2.7.4
 
 
-From 78f4b1aae54ec46e88e9145b5ff58aae6de46b64 Mon Sep 17 00:00:00 2001
+From 864c64a079b3eb8bc8454db4db1d81788e14de2f Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Thu, 12 Oct 2017 14:35:13 +0200
-Subject: [PATCH 33/41] Fix initialization of transform matrices
+Subject: [PATCH 33/45] Fix initialization of transform matrices
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 2 ++
@@ -2650,10 +2650,10 @@ index d4a5465..c17e0c7 100644
 2.7.4
 
 
-From 3284e006148b65e232402e7fd2a0d8ee1f64cd34 Mon Sep 17 00:00:00 2001
+From c1768becc8b2197ee5e7186539ea55b2aea59467 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Thu, 12 Oct 2017 14:36:54 +0200
-Subject: [PATCH 34/41] Fix comparison of two float numbers
+Subject: [PATCH 34/45] Fix comparison of two float numbers
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 12 +++++++-----
@@ -2701,10 +2701,10 @@ index c17e0c7..b6bcef9 100644
 2.7.4
 
 
-From fd27ea44f131ac637a02855d8aea027de5948110 Mon Sep 17 00:00:00 2001
+From 3439c1135c7c2f2726ce4728666801c716297c8c Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Thu, 12 Oct 2017 14:43:50 +0200
-Subject: [PATCH 35/41] Fix direction of cylinder and cone
+Subject: [PATCH 35/45] Fix direction of cylinder and cone
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 16 ++++++++--------
@@ -2748,10 +2748,10 @@ index b6bcef9..5994dcf 100644
 2.7.4
 
 
-From bc65d4d505a981751b5e72b1c8e2007a0aff1fd8 Mon Sep 17 00:00:00 2001
+From aa329bc0a1279080641a93578f0d67398504d6ec Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Thu, 12 Oct 2017 15:08:44 +0200
-Subject: [PATCH 36/41] Remove opticNameMap
+Subject: [PATCH 36/45] Remove opticNameMap
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 7 ++-----
@@ -2800,10 +2800,10 @@ index 5994dcf..67ad963 100644
 2.7.4
 
 
-From a02e165971b9faa3ed74a03114105bedcf23c7fe Mon Sep 17 00:00:00 2001
+From 01d6b0e6efded5abe95e0045aa8dad8ef7a95e3e Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Thu, 12 Oct 2017 15:24:13 +0200
-Subject: [PATCH 37/41] Fix redundant code
+Subject: [PATCH 37/45] Fix redundant code
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 2 +-
@@ -2826,10 +2826,10 @@ index 67ad963..8e69af9 100644
 2.7.4
 
 
-From 6d28ac304101d746f46b136259b29a4b02a25ef1 Mon Sep 17 00:00:00 2001
+From ee95e8ff74a1cf28f5e7601e0b3fe29cda957e75 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Thu, 12 Oct 2017 15:27:16 +0200
-Subject: [PATCH 38/41] Remove some functions
+Subject: [PATCH 38/45] Remove some functions
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 18 ------------------
@@ -2882,10 +2882,10 @@ index 8e69af9..b20cbc5 100644
 2.7.4
 
 
-From 2381a49e5d26b1b4361314644bdff70c233d0ae0 Mon Sep 17 00:00:00 2001
+From 38991106e2f9e8e2756c44c0ecce9cbd5e76f148 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Thu, 12 Oct 2017 15:40:25 +0200
-Subject: [PATCH 39/41] Extract creation of each primitive
+Subject: [PATCH 39/45] Extract creation of each primitive
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 108 +++++++++++++++++++++++------------
@@ -3028,10 +3028,10 @@ index b20cbc5..c8b5c11 100644
 2.7.4
 
 
-From 2c2645afabcafb8b61512adc72216d0ddcede108 Mon Sep 17 00:00:00 2001
+From ed6de3253dc2c7135e3eee961df67b4a469682f6 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Thu, 12 Oct 2017 15:45:36 +0200
-Subject: [PATCH 40/41] Add comments
+Subject: [PATCH 40/45] Add comments
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 3 +++
@@ -3055,10 +3055,10 @@ index c8b5c11..0102db3 100644
 2.7.4
 
 
-From 02b02243c6e35c9e64fb1031ed4fb4f6d175570c Mon Sep 17 00:00:00 2001
+From 13e954bada66352000aab427395369072ac170a5 Mon Sep 17 00:00:00 2001
 From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
 Date: Tue, 17 Oct 2017 21:01:18 +0200
-Subject: [PATCH 41/41] Fix calculation of joint
+Subject: [PATCH 41/45] Fix calculation of joint
 
 ---
  src/RokiPlugin/RokiSimulatorItem.cpp | 8 +++++++-
@@ -3083,6 +3083,499 @@ index 0102db3..ce99ece 100644
      }else{
          nx.normalize();
          wAtt.col(0) = nx;
+-- 
+2.7.4
+
+
+From e0911deb16324be3d2f97180cff3c57f202ba5a0 Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Thu, 26 Oct 2017 17:06:34 +0200
+Subject: [PATCH 42/45] Fix computation of cylinder direction for zShape3D
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index ce99ece..057d746 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -671,7 +671,8 @@ void RokiVisualShape::createAsSphere(SgMesh* mesh, const Affine3& T0, const Vect
+ void RokiVisualShape::createAsCylinder(SgMesh* mesh, const Affine3& T0, const Affine3& T_, const Vector3& p, const Vector3& scale)
+ {
+     SgMesh::Cylinder cylinder = mesh->primitive<SgMesh::Cylinder>();
+-    Vector3 ax(T_(0,0), T_(1,0), T_(2,0));
++    // Vector3 ax(T_(0,0), T_(1,0), T_(2,0));
++    Vector3 ax(T0(0,2), T0(1,2), T0(2,2));
+     ax *= cylinder.height/2.0 * scale.x();
+     Vector3 c1_ = T0 * ax.cast<Position::Scalar>();
+     Vector3 c2_ = T0 * (-ax).cast<Position::Scalar>();
+-- 
+2.7.4
+
+
+From dc7668ab4740eb8a6cf2eb99bf2edd7cf00696cb Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Fri, 27 Oct 2017 13:39:02 +0200
+Subject: [PATCH 43/45] Refactor some functions
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 29 ++++++++++++++---------------
+ 1 file changed, 14 insertions(+), 15 deletions(-)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index 057d746..2c50e74 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -222,8 +222,8 @@ private:
+     bool canBeCreatedAsPrimitive(SgMesh* mesh);
+     void createAsBox(SgMesh* mesh, const Affine3& T0, const Vector3& p, const Vector3& scale);
+     void createAsSphere(SgMesh* mesh, const Affine3& T0, const Vector3& p, const Vector3& scale);
+-    void createAsCylinder(SgMesh* mesh, const Affine3& T0, const Affine3& T_, const Vector3& p, const Vector3& scale);
+-    void createAsCone(SgMesh* mesh, const Affine3& T0, const Affine3& T_, const Vector3& p, const Vector3& scale);
++    void createAsCylinder(SgMesh* mesh, const Affine3& T0, const Vector3& p, const Vector3& scale);
++    void createAsCone(SgMesh* mesh, const Affine3& T0, const Vector3& p, const Vector3& scale);
+     void createAsPrimitive(SgMesh* mesh);
+     void createAsPolyhedron(SgMesh* mesh);
+ };
+@@ -668,14 +668,13 @@ void RokiVisualShape::createAsSphere(SgMesh* mesh, const Affine3& T0, const Vect
+ }
+ 
+ 
+-void RokiVisualShape::createAsCylinder(SgMesh* mesh, const Affine3& T0, const Affine3& T_, const Vector3& p, const Vector3& scale)
++void RokiVisualShape::createAsCylinder(SgMesh* mesh, const Affine3& T0, const Vector3& p, const Vector3& scale)
+ {
+     SgMesh::Cylinder cylinder = mesh->primitive<SgMesh::Cylinder>();
+-    // Vector3 ax(T_(0,0), T_(1,0), T_(2,0));
+-    Vector3 ax(T0(0,2), T0(1,2), T0(2,2));
+-    ax *= cylinder.height/2.0 * scale.x();
+-    Vector3 c1_ = T0 * ax.cast<Position::Scalar>();
+-    Vector3 c2_ = T0 * (-ax).cast<Position::Scalar>();
++    Vector3 az(T0(0,2), T0(1,2), T0(2,2));
++    az *= cylinder.height/2.0 * scale.x();
++    Vector3 c1_ = T0 * az.cast<Position::Scalar>();
++    Vector3 c2_ = T0 * (-az).cast<Position::Scalar>();
+     zVec3D c1, c2;
+ 
+     zVec3DCreate(&c1, c1_.x(), c1_.y(), c1_.z());
+@@ -684,13 +683,13 @@ void RokiVisualShape::createAsCylinder(SgMesh* mesh, const Affine3& T0, const Af
+ }
+ 
+ 
+-void RokiVisualShape::createAsCone(SgMesh* mesh, const Affine3& T0, const Affine3& T_, const Vector3& p, const Vector3& scale)
++void RokiVisualShape::createAsCone(SgMesh* mesh, const Affine3& T0, const Vector3& p, const Vector3& scale)
+ {
+     SgMesh::Cone cone = mesh->primitive<SgMesh::Cone>();
+-    Vector3 ax(T_(0,0), T_(1,0), T_(2,0));
+-    ax *= cone.height/2.0 * scale.x();
+-    Vector3 c1_ = T0 * ax.cast<Position::Scalar>();
+-    Vector3 c2_ = T0 * (-ax).cast<Position::Scalar>();
++    Vector3 az(T0(0,2), T0(1,2), T0(2,2));
++    az *= cone.height/2.0 * scale.x();
++    Vector3 c1_ = T0 * az.cast<Position::Scalar>();
++    Vector3 c2_ = T0 * (-az).cast<Position::Scalar>();
+     zVec3D c1, c2;
+ 
+     zVec3DCreate(&c1, c1_.x(), c1_.y(), c1_.z());
+@@ -725,10 +724,10 @@ void RokiVisualShape::createAsPrimitive(SgMesh* mesh)
+         createAsSphere(mesh, T0, p, scale);
+         break;
+     case SgMesh::CYLINDER :
+-        createAsCylinder(mesh, T0, T_, p, scale);
++        createAsCylinder(mesh, T0, p, scale);
+         break;
+     case SgMesh::CONE :
+-        createAsCone(mesh, T0, T_, p, scale);
++        createAsCone(mesh, T0, p, scale);
+         break;
+     default:
+         cerr << "cannot be created as primitive (type: "
+-- 
+2.7.4
+
+
+From 2567c0242f5e04d2d28b4a757f41715ebaa0a006 Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Fri, 27 Oct 2017 11:40:05 +0200
+Subject: [PATCH 44/45] Fix how to traverse shapes
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 123 ++++++++++++++++++++++++++++-------
+ 1 file changed, 98 insertions(+), 25 deletions(-)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index 2c50e74..fc03fba 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -285,6 +285,7 @@ public:
+     void switchToColShape();
+     void switchToVisShape();
+ 
++    void addShape(SgNode* node, RokiOpticalInfoList* optlist, RokiVisualShapeList* vislist);
+ private:
+     typedef struct {
+         int num;
+@@ -295,6 +296,17 @@ private:
+     void overwriteList(zShapeList *list, ListSet *listSet);
+     zShapeList colShapeList;
+     zShapeList visShapeList;
++
++    PolymorphicFunctionSet<SgNode> visitors;
++    void visitGroup(SgGroup* group);
++    void visitSwitch(SgSwitch* switchNode);
++    void visitTransform(SgTransform* transform);
++    void visitPosTransform(SgPosTransform* transform);
++    void visitShape(SgShape* shape);
++    RokiOpticalInfoList* optlist_;
++    RokiVisualShapeList* vislist_;
++    void addOpticalInfo(SgNode* node);
++    void addVisualShape(SgNode* node);
+ };
+ typedef ref_ptr<RokiLink> RokiLinkPtr;
+ 
+@@ -322,7 +334,7 @@ public:
+     void switchToColShape();
+     void switchToVisShape();
+     void findAllOpticalInfo(RokiOpticalInfoList& list);
+-    void findAllShape(RokiVisualShapeList& list);
++    void findAllShape(RokiOpticalInfoList* optlist, RokiVisualShapeList* vislist);
+     void exportAsZkcFile(const std::string& filename);
+ };
+ 
+@@ -842,6 +854,18 @@ RokiLink::RokiLink
+     createGeometry();
+     updateColShapeList();
+ 
++    visitors.setFunction<SgGroup>(
++        [&](SgGroup* node){ visitGroup(node); });
++    visitors.setFunction<SgSwitch>(
++        [&](SgSwitch* node){ visitSwitch(node); });
++    visitors.setFunction<SgTransform>(
++        [&](SgTransform* node){ visitTransform(node); });
++    visitors.setFunction<SgPosTransform>(
++        [&](SgPosTransform* node){ visitPosTransform(node); });
++    visitors.setFunction<SgShape>(
++        [&](SgShape* node){ visitShape(node); });
++    visitors.updateDispatchTable();
++
+     for(Link* child = link->child(); child; child = child->sibling()){
+         new RokiLink(simImpl, rokiBody, this, o, child, stuffisLinkName);
+     }
+@@ -1390,6 +1414,65 @@ void RokiLink::switchToVisShape()
+ }
+ 
+ 
++void RokiLink::visitGroup(SgGroup* group)
++{
++    for(auto const p : *group){
++        visitors.dispatch(p);
++    }
++}
++
++
++void RokiLink::visitSwitch(SgSwitch* switchNode)
++{
++    if(switchNode->isTurnedOn()){
++        visitGroup(switchNode);
++    }
++}
++
++
++void RokiLink::addOpticalInfo(SgNode* node)
++{
++    RokiOpticalInfo *opt = new RokiOpticalInfo(node);
++    optlist_->add(*opt);
++}
++
++
++void RokiLink::addVisualShape(SgNode* node)
++{
++    RokiVisualShape *shape = new RokiVisualShape(node, *this);
++    vislist_->add(*shape);
++}
++
++
++void RokiLink::visitTransform(SgTransform* transform)
++{
++    addOpticalInfo(transform);
++    addVisualShape(transform);
++}
++
++
++void RokiLink::visitPosTransform(SgPosTransform* transform)
++{
++    addOpticalInfo(transform);
++    addVisualShape(transform);
++}
++
++
++void RokiLink::visitShape(SgShape* shape)
++{
++    addOpticalInfo(shape);
++    addVisualShape(shape);
++}
++
++
++void RokiLink::addShape(SgNode* node, RokiOpticalInfoList* optlist, RokiVisualShapeList* vislist)
++{
++    optlist_ = optlist;
++    vislist_ = vislist;
++    visitors.dispatch(node);
++}
++
++
+ RokiBody::RokiBody(const Body& orgBody)
+     : SimulationBody(new Body(orgBody))
+ {
+@@ -1583,20 +1666,12 @@ void RokiBody::findAllOpticalInfo(RokiOpticalInfoList& list)
+ }
+ 
+ 
+-void RokiBody::findAllShape(RokiVisualShapeList& list)
++void RokiBody::findAllShape(RokiOpticalInfoList* optlist, RokiVisualShapeList* vislist)
+ {
+     for(int i=0; i<body()->numLinks(); ++i){
+         Link* link = body()->link(i);
+         RokiLink *rklink = rokiLinkMap[link];
+-        SgGroup *group;
+-        if(!(group = dynamic_cast<SgGroup*>(link->visualShape()))){
+-            cerr << "cannot be converted to 'SgGroup*': "
+-                 << typeid(link->visualShape()).name() << endl;
+-        }
+-        for(auto child : *group){
+-            RokiVisualShape *shape = new RokiVisualShape(child.get(), *rklink);
+-            list.add(*shape);
+-        }
++        rklink->addShape(link->visualShape(), optlist, vislist);
+         rklink->updateVisShapeList();
+     }
+ }
+@@ -1609,25 +1684,23 @@ void RokiBody::exportAsZkcFile(const std::string& filename)
+         rkChainShape(chain) = zAlloc(zMShape3D, 1);
+     zMShape3DInit(rkChainShape(chain));
+ 
+-    // find all optical infos
+-    RokiOpticalInfoList opticList;
+-    findAllOpticalInfo(opticList);
+-    zArrayAlloc(&rkChainShape(chain)->optic, zOpticalInfo, opticList.num());
+-    for(int i=0; i<opticList.num(); ++i){
++    // find all shapes
++    RokiOpticalInfoList optList;
++    RokiVisualShapeList visList;
++    switchToVisShape();
++    findAllShape(&optList, &visList);
++    zArrayAlloc(&rkChainShape(chain)->optic, zOpticalInfo, optList.num());
++    for(int i=0; i<optList.num(); ++i){
+         zOpticalInfo *target = zMShape3DOptic(rkChainShape(chain), i);
+-        zOpticalInfoClone(opticList.get(i).get(), target);
++        zOpticalInfoClone(optList.get(i).get(), target);
+     }
+ 
+-    // find all shapes
+-    RokiVisualShapeList shapeList;
+-    switchToVisShape();
+-    findAllShape(shapeList);
+-    zArrayAlloc(&rkChainShape(chain)->shape, zShape3D, shapeList.num());
+-    for(int i=0; i<shapeList.num(); ++i){
++    zArrayAlloc(&rkChainShape(chain)->shape, zShape3D, visList.num());
++    for(int i=0; i<visList.num(); ++i){
+         zShape3D *target = zMShape3DShape(rkChainShape(chain), i);
+         const zOpticalInfo *opt = \
+-            opticList.findByOpticName(shapeList.get(i).getOpticName()).get();
+-        zShape3DClone(shapeList.get(i).get(), target,
++            optList.findByOpticName(visList.get(i).getOpticName()).get();
++        zShape3DClone(visList.get(i).get(), target,
+                       const_cast<zOpticalInfo*>(opt));
+     }
+ 
+-- 
+2.7.4
+
+
+From d19faafb732ecb67c090fe1161d7bde26d1f2042 Mon Sep 17 00:00:00 2001
+From: Hiroshi Atsuta <atsuta.hiroshi@gmail.com>
+Date: Fri, 27 Oct 2017 13:33:56 +0200
+Subject: [PATCH 45/45] Fix to handle the case where link one has some shapes
+
+---
+ src/RokiPlugin/RokiSimulatorItem.cpp | 72 ++++++++++++++++++++++++------------
+ 1 file changed, 49 insertions(+), 23 deletions(-)
+
+diff --git a/src/RokiPlugin/RokiSimulatorItem.cpp b/src/RokiPlugin/RokiSimulatorItem.cpp
+index fc03fba..9e7327d 100644
+--- a/src/RokiPlugin/RokiSimulatorItem.cpp
++++ b/src/RokiPlugin/RokiSimulatorItem.cpp
+@@ -196,8 +196,8 @@ class RokiVisualShape
+ public:
+     RokiVisualShape(SgNode* node, const RokiLink& link);
+ 
+-    const zShape3D* get() const { return &shape_; }
+-    zShape3D* get() { return &shape_; }
++    const vector<zShape3D*> get() const { return shape_; }
++    vector<zShape3D*> get() { return shape_; }
+     void setOpticName(const string& name){ opticName_ = name; }
+     string getOpticName() { return opticName_; }
+ 
+@@ -209,7 +209,7 @@ private:
+     bool isCurrentScaled;
+ 
+     const RokiLink& link_;
+-    zShape3D shape_;
++    vector<zShape3D*> shape_;
+     string opticName_;
+ 
+     void visitGroup(SgGroup* group);
+@@ -235,7 +235,7 @@ public:
+     bool add(RokiVisualShape shape);
+     RokiVisualShape& get(int index) { return list_[index]; }
+     const RokiVisualShape& get(int index) const { return list_[index]; }
+-    int num() const { return list_.size(); }
++    int num();
+ 
+     vector<RokiVisualShape>::iterator begin() { return list_.begin(); }
+     vector<RokiVisualShape>::iterator end() { return list_.end(); }
+@@ -559,7 +559,6 @@ RokiVisualShape::RokiVisualShape(SgNode* node, const RokiLink& link)
+         [&](SgShape* node){ visitShape(node); });
+     visitors.updateDispatchTable();
+ 
+-    zShape3DInit(&shape_);
+     currentTransform.setIdentity();
+     currentTransformWithoutScaling.setIdentity();
+     visitors.dispatch(node);
+@@ -665,8 +664,11 @@ void RokiVisualShape::createAsBox(SgMesh* mesh, const Affine3& T0, const Vector3
+     zVec3DCreate(&ax, T0(0,0), T0(1,0), T0(2,0));
+     zVec3DCreate(&ay, T0(0,1), T0(1,1), T0(2,1));
+     zVec3DCreate(&az, T0(0,2), T0(1,2), T0(2,2));
+-    zShape3DCreateBox(&shape_, &zp, &ax, &ay, &az,
++    zShape3D* shape = new zShape3D;
++    zShape3DInit(shape);
++    zShape3DCreateBox(shape, &zp, &ax, &ay, &az,
+                       s.x()*scale.x(), s.y()*scale.y(), s.z()*scale.z());
++    shape_.push_back(shape);
+ }
+ 
+ 
+@@ -676,7 +678,10 @@ void RokiVisualShape::createAsSphere(SgMesh* mesh, const Affine3& T0, const Vect
+     zVec3D zp;
+ 
+     zVec3DCreate(&zp, p.x(), p.y(), p.z());
+-    zShape3DCreateSphere(&shape_, &zp, sphere.radius*scale.x(), 0);
++    zShape3D* shape = new zShape3D;
++    zShape3DInit(shape);
++    zShape3DCreateSphere(shape, &zp, sphere.radius*scale.x(), 0);
++    shape_.push_back(shape);
+ }
+ 
+ 
+@@ -691,7 +696,10 @@ void RokiVisualShape::createAsCylinder(SgMesh* mesh, const Affine3& T0, const Ve
+ 
+     zVec3DCreate(&c1, c1_.x(), c1_.y(), c1_.z());
+     zVec3DCreate(&c2, c2_.x(), c2_.y(), c2_.z());
+-    zShape3DCreateCyl(&shape_, &c1, &c2, cylinder.radius*scale.x(), 0);
++    zShape3D* shape = new zShape3D;
++    zShape3DInit(shape);
++    zShape3DCreateCyl(shape, &c1, &c2, cylinder.radius*scale.x(), 0);
++    shape_.push_back(shape);
+ }
+ 
+ 
+@@ -706,7 +714,10 @@ void RokiVisualShape::createAsCone(SgMesh* mesh, const Affine3& T0, const Vector
+ 
+     zVec3DCreate(&c1, c1_.x(), c1_.y(), c1_.z());
+     zVec3DCreate(&c2, c2_.x(), c2_.y(), c2_.z());
+-    zShape3DCreateCone(&shape_, &c1, &c2, cone.radius*scale.x(), 0);
++    zShape3D* shape = new zShape3D;
++    zShape3DInit(shape);
++    zShape3DCreateCone(shape, &c1, &c2, cone.radius*scale.x(), 0);
++    shape_.push_back(shape);
+ }
+ 
+ 
+@@ -747,7 +758,7 @@ void RokiVisualShape::createAsPrimitive(SgMesh* mesh)
+         break;
+     }
+     // bounding box
+-    zBox3DInit(zShape3DBB(&shape_));
++    zBox3DInit(zShape3DBB(shape_.back()));
+ }
+ 
+ 
+@@ -778,9 +789,11 @@ void RokiVisualShape::createAsPolyhedron(SgMesh* mesh)
+         triangles.push_back(tri);
+     }
+ 
+-    zShape3DType(&shape_) = zShapeTypeByStr((char*)"polyhedron");
+-    shape_.com = &zprim_ph3d_com;
+-    zPH3D* ph = (zPH3D*)&shape_.body;
++    zShape3D* shape = new zShape3D;
++    zShape3DInit(shape);
++    zShape3DType(shape) = zShapeTypeByStr((char*)"polyhedron");
++    shape->com = &zprim_ph3d_com;
++    zPH3D* ph = (zPH3D*)&shape->body;
+     zPH3DInit(ph);
+     int vc = vertices.size();
+     int fc = triangles.size();
+@@ -799,8 +812,9 @@ void RokiVisualShape::createAsPolyhedron(SgMesh* mesh)
+     }
+     // bounding box
+     zAABox3D aabb;
+-    zAABB(&aabb, zShape3DVertBuf(&shape_), zShape3DVertNum(&shape_), NULL);
+-    zAABox3DToBox3D(&aabb, zShape3DBB(&shape_));
++    zAABB(&aabb, zShape3DVertBuf(shape), zShape3DVertNum(shape), NULL);
++    zAABox3DToBox3D(&aabb, zShape3DBB(shape));
++    shape_.push_back(shape);
+ }
+ 
+ 
+@@ -814,8 +828,18 @@ void RokiVisualShape::visitShape(SgShape* shape)
+     }
+     RokiOpticalInfo opt(shape);
+     setOpticName(opt.name());
+-    zNameSet(&shape_, const_cast<char*>(createShapeName().c_str()));
+-    rkLinkShapePush(link_.rklink, &shape_);
++    zNameSet(shape_.back(), const_cast<char*>(createShapeName().c_str()));
++    rkLinkShapePush(link_.rklink, shape_.back());
++}
++
++
++int RokiVisualShapeList::num()
++{
++    int n = 0;
++    for(auto vs : list_){
++        n += vs.get().size();
++    }
++    return n;
+ }
+ 
+ 
+@@ -1689,6 +1713,7 @@ void RokiBody::exportAsZkcFile(const std::string& filename)
+     RokiVisualShapeList visList;
+     switchToVisShape();
+     findAllShape(&optList, &visList);
++
+     zArrayAlloc(&rkChainShape(chain)->optic, zOpticalInfo, optList.num());
+     for(int i=0; i<optList.num(); ++i){
+         zOpticalInfo *target = zMShape3DOptic(rkChainShape(chain), i);
+@@ -1696,12 +1721,13 @@ void RokiBody::exportAsZkcFile(const std::string& filename)
+     }
+ 
+     zArrayAlloc(&rkChainShape(chain)->shape, zShape3D, visList.num());
+-    for(int i=0; i<visList.num(); ++i){
+-        zShape3D *target = zMShape3DShape(rkChainShape(chain), i);
+-        const zOpticalInfo *opt = \
+-            optList.findByOpticName(visList.get(i).getOpticName()).get();
+-        zShape3DClone(visList.get(i).get(), target,
+-                      const_cast<zOpticalInfo*>(opt));
++    int cnt = 0;
++    for(auto v : visList){
++        const zOpticalInfo *opt = optList.findByOpticName(v.getOpticName()).get();
++        for(auto s : v.get()){
++            zShape3D *target = zMShape3DShape(rkChainShape(chain), cnt++);
++            zShape3DClone(s, target, const_cast<zOpticalInfo*>(opt));
++        }
+     }
+ 
+     // export
 -- 
 2.7.4
 
