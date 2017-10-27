@@ -112,7 +112,7 @@ run_choreonoid () {
     make_script
     if [ $FLAG_KILL = TRUE ]; then
         # run choreonoid on background to kill afterwards
-        $CHOREONOID --python $TMP_PYTHON_SCRIPT $PROJECT_TEMPLATE &> /dev/null &
+        $CHOREONOID --python $TMP_PYTHON_SCRIPT $PROJECT_TEMPLATE > /dev/null &
     else
         $CHOREONOID --python $TMP_PYTHON_SCRIPT $PROJECT_TEMPLATE
     fi
