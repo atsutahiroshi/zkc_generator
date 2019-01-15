@@ -4,6 +4,7 @@ Requirements:
   * git
   * cmake
   * roki
+  * dependent softwares to build choreonoid
 
 How to run:
 $ ./setup.sh  # you need to run setup only first time
