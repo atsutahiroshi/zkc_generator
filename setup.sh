@@ -103,6 +103,26 @@ check_args () {
     fi
 }
 
+command_exists () {
+    command -v $1 >/dev/null 2>&1
+    return $?
+}
+
+abort () {
+    echo "Abort."
+    exit 1
+}
+
+check_requirements () {
+    required_commands="git cmake roki_config"
+    for c in $required_commands; do
+        if ! command_exists $c; then
+          echo "$c doesn't exist!"
+          abort
+        fi
+    done
+}
+
 print_var () {
     eval "tmp=\$$1"
     echo "$1=\"$tmp\""
@@ -199,12 +219,14 @@ find_roki_dir () {
     echo $ROKI_DIR
 }
 
-cmake_option() {
+cmake_option () {
     echo "-D${1}=${2} "
 }
-CMAKE_OPTIONS=\
-$(cmake_option BUILD_ROKI_PLUGIN ON)\
-$(cmake_option ROKI_DIR $(find_roki_dir))
+
+make_cmake_options () {
+    echo "$(cmake_option BUILD_ROKI_PLUGIN ON)"\
+         "$(cmake_option ROKI_DIR /home/atsuta/usr)"
+}
 
 
 #
@@ -212,11 +234,12 @@ $(cmake_option ROKI_DIR $(find_roki_dir))
 #
 CWD=$(pwd)
 check_args "$@"
+check_requirements
 
 cd $TOP_DIR
 if [ $FLAG_SHOW_CONFIG = TRUE ]; then
-  make_config
-  exit 0
+    make_config
+    exit 0
 fi
 export_config
 load_config
@@ -227,6 +250,6 @@ apply_patches_in_dir $PATCH_DIR
 
 mkdir -p $CNOID_BUILD_DIR
 cd $CNOID_BUILD_DIR
-cmake $CMAKE_OPTIONS -Wno-dev ..
+cmake $(make_cmake_options) -Wno-dev ..
 
 cd $CWD
