@@ -7,5 +7,7 @@ Requirements:
   * dependent softwares to build choreonoid
 
 How to run:
+$ git submodule init
+$ git submodule update  # to download choreonoid
 $ ./setup.sh  # you need to run setup only first time
 $ ./convert.sh choreonoid/share/model/misc/arm_2dof.body
