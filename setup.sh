@@ -114,7 +114,7 @@ abort () {
 }
 
 check_requirements () {
-    required_commands="git cmake roki_config"
+    required_commands="git cmake roki-config"
     for c in $required_commands; do
         if ! command_exists $c; then
           echo "$c doesn't exist!"
