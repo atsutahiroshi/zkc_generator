@@ -13,6 +13,7 @@ help_message () {
     printf "\t--cnoid-build-dir [path] \tchoreonoid build directory\n"
     printf "\t--branch [name]       \tbranch name for working\n"
     printf "\t--patch-dir [path]    \tdirectory that contains patches\n"
+    printf "\t--show-config         \tshow configurations and exit\n"
 }
 
 #
@@ -22,6 +23,7 @@ TOP_DIR="$(cd "$(dirname "$0")" ; pwd -P)"
 
 FLAG_CONFIG_EXPORT_GIVEN=FALSE
 FLAG_CONFIG_LOAD_GIVEN=FALSE
+FLAG_SHOW_CONFIG=FALSE
 CONFIG_FILE_EXPORT="$TOP_DIR/config"
 CONFIG_FILE_LOAD="$TOP_DIR/config"
 
@@ -61,6 +63,9 @@ check_args () {
                                ;;
             --patch-dir)       PATCH_DIR=$2
                                shift 2
+                               ;;
+            --show-config)     FLAG_SHOW_CONFIG=TRUE
+                               shift 1
                                ;;
             -h|--help)         help_message
                                exit 0
@@ -209,6 +214,10 @@ CWD=$(pwd)
 check_args "$@"
 
 cd $TOP_DIR
+if [ $FLAG_SHOW_CONFIG = TRUE ]; then
+  make_config
+  exit 0
+fi
 export_config
 load_config
 
