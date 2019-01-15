@@ -180,7 +180,7 @@ git_checkout () {
     if git_branch_exists $1; then
         git checkout $1
     else
-        git checkout -b $1 master
+        git checkout -b $1 HEAD
     fi
 }
 
@@ -244,6 +244,7 @@ fi
 export_config
 load_config
 
+git submodule update
 cd $CNOID_DIR
 git_checkout $BRANCH_NAME
 apply_patches_in_dir $PATCH_DIR
