@@ -11,3 +11,8 @@ $ git submodule init
 $ git submodule update  # to download choreonoid
 $ ./setup.sh  # you need to run setup only first time
 $ ./convert.sh choreonoid/share/model/misc/arm_2dof.body
+
+How to update a patch:
+After getting ready to update,
+$ cd choreonoid/
+$ git format-patch 0b2465cd --stdout > ../patches/0001-fix-RokiSimulatorItem.patch
