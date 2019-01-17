@@ -25,6 +25,7 @@ CONFIG_FILE="$TOP_DIR/config"
 EXPORT_FILE_PATH=
 ORIGINAL_FILE_PATH=
 FLAG_BUILD=TRUE
+FLAG_BUILD_ONLY=FALSE
 FLAG_KILL=FALSE
 KILL_AFTER_SEC=1
 PROJECT_TEMPLATE="project/template.cnoid"
@@ -44,6 +45,9 @@ check_args () {
                               shift
                               ;;
             --no-build)       FLAG_BUILD=FALSE
+                              shift
+                              ;;
+            --build-only)     FLAG_BUILD_ONLY=TRUE
                               shift
                               ;;
             --kill)           FLAG_KILL=TRUE
@@ -73,15 +77,17 @@ check_args () {
         esac
     done
 
-    # check if ORIGINAL_FILE_PATH specified, and exists
-    if [ -z $ORIGINAL_FILE_PATH ]; then
-        echo "please specify original wrl file"
-        help_message
-        exit 1
-    fi
-    if [ ! -f $ORIGINAL_FILE_PATH ]; then
-        echo "$ORIGINAL_FILE_PATH does not exist!"
-        exit 1
+    if [ $FLAG_BUILD_ONLY = FALSE ]; then
+        # check if ORIGINAL_FILE_PATH specified, and exists
+        if [ -z $ORIGINAL_FILE_PATH ]; then
+            echo "please specify original wrl file"
+            help_message
+            exit 1
+        fi
+        if [ ! -f $ORIGINAL_FILE_PATH ]; then
+            echo "$ORIGINAL_FILE_PATH does not exist!"
+            exit 1
+        fi
     fi
 }
 
@@ -139,6 +145,9 @@ export_as_zkc () {
 check_args "$@"
 load_config
 build_choreonoid
+if [ $FLAG_BUILD_ONLY = TRUE ]; then
+  exit 0
+fi
 run_choreonoid
 kill_choreonoid
 export_as_zkc
